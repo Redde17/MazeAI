@@ -6,10 +6,26 @@
 #include "imgui-SFML.h"
 
 #include "MazeHandler.h"
+#include "MazeMap.h"
+
+#define SIZE_X 50
+#define SIZE_Y 50
 
 int main() {
     MazeHandler* MH = MazeHandler::GetInstance();
 
+    Vector2* mapSize = new Vector2(SIZE_X, SIZE_Y);
+    MazeMap* MM = new MazeMap(*mapSize);
+
+    //DEBUG
+    std::vector<int> neighboursMap = MM->GetNeighboursMap();
+
+    for (size_t x = 0; x < SIZE_X; x++) {
+        for (size_t y = 0; y < SIZE_Y; y++) {
+            std::cout << neighboursMap[MM->parsePosition(new Vector2(x, y))] << " ";
+        }
+        std::cout << std::endl;
+    }
 
 
     sf::RenderWindow window(sf::VideoMode({ 500, 500 }), "MazeAI");

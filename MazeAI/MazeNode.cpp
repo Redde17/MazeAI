@@ -1,33 +1,69 @@
 #include "MazeNode.h"
 
-// \brief Empty constructor for node without walls
+// \brief Empty constructor for node without neighbours
 MazeNode::MazeNode() {
-	for (int i = 0; i < WALLS_AMOUNT; i++)
-		walls[i] = false;
+	for (int i = 0; i < NEIGHBOURS; i++)
+		neighbours[i] = nullptr;
 }
 
-// \brief Constructor for a node with walls
+// \brief Constructor for a node with all neighbours
 // 
-// Sets the walls for the MazeNode usiong bools
-// True = wall
-// False = no wall
-// 
-// \param northWall	bool for the north wall
-// \param southWall bool for the south wall
-// \param eastWall	bool for the east wall
-// \param westWall	bool for the west wall
-MazeNode::MazeNode(const bool northWall, const bool southWall, const bool eastWall, const bool westWall) {
-	walls[NORTH] = northWall;
-	walls[SOUTH] = southWall;
-	walls[EAST] = eastWall;
-	walls[WEST] = westWall;
+// \param northNeigbour	pointer to the neighbour above the current node
+// \param southNeigbour pointer to the neighbour below the current node
+// \param eastNeigbour	pointer to the neighbour right of the current node
+// \param westNeigbour	pointer to the neighbour left of the current node
+MazeNode::MazeNode(MazeNode* northNeigbour, MazeNode* southNeigbour, MazeNode* eastNeigbour, MazeNode* westNeigbour) {
+	this->setNeighbours(northNeigbour, southNeigbour, eastNeigbour, westNeigbour);
 }
 
-// \brief Get tha status of a specific wall from the node
+// \brief Get a specific neighbour of the MazeNode
 // 
-// \param wall	Defines to wall to get from the node
+// \param neighbour	Defines the neighbour to get from the node
 // 
-// \return bool value for the wall of the node
-bool MazeNode::getWall(NodeWall wall) {
-	return walls[wall];
+// \return MazeNode* pointer to the neighbouring node
+MazeNode* MazeNode::getNeighbour(Neighbour neighbour) {
+	return neighbours[neighbour];
+}
+
+// \brief Set a neighbour for the node
+// 
+// \param neighbour		Defines where the neighbour to set for the node is
+// \param nodeNeighbour	Defines the neighbour to set for the node
+void MazeNode::setNeighbour(Neighbour neighbour, MazeNode* nodeNeigbour) {
+	neighbours[neighbour] = nodeNeigbour;
+}
+
+// \brief Set all the neighbours for the node
+// 
+// The neighbours are pointers to other MazeNodes near the current one
+// 
+// \param northNeigbour	pointer to the neighbour above the current node
+// \param southNeigbour pointer to the neighbour below the current node
+// \param eastNeigbour	pointer to the neighbour right of the current node
+// \param westNeigbour	pointer to the neighbour left of the current node
+void MazeNode::setNeighbours(MazeNode* northNeigbour, MazeNode* southNeigbour, MazeNode* eastNeigbour, MazeNode* westNeigbour) {
+	neighbours[NORTH] = northNeigbour;
+	neighbours[SOUTH] = southNeigbour;
+	neighbours[EAST] = eastNeigbour;
+	neighbours[WEST] = westNeigbour;
+}
+
+// \brief Remove a neighbour from the node
+// 
+// \param neighbour	Defines the neighbour to remove from the node
+void MazeNode::removeNeighbour(Neighbour neighbour) {
+	neighbours[neighbour] = nullptr;
+}
+
+// \brief Gets the amount of neighbours of the node
+// 
+// \return Integer for the amount of neighbours
+int MazeNode::getNeighboursAmount() {
+	int amount = 0;
+
+	for(MazeNode* neighbour : neighbours)
+		if (neighbour)	//checks if neighbour is not nullptr
+			amount++;
+
+	return amount;
 }
