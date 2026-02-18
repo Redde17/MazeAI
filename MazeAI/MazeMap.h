@@ -7,7 +7,6 @@ struct Vector2 {
 	int x;
 	int y;
 
-
 	Vector2(const int x, const int y) {
 		this->x = x;
 		this->y = y;
@@ -24,6 +23,7 @@ struct BoundedVector2 : Vector2 {
 	Vector2* yBounds;
 
 	using Vector2::Vector2;
+	~BoundedVector2();
 
 	// \brief Sets the bounds for the vector
 	// 
@@ -118,14 +118,25 @@ public:
 
 	// \brief Parses (x, y) coordinates into single value for map vector
 	// 
+	// This function should be used when trying to access any node on the maze map.
+	// 
+	// 
 	// position is passed by reference.
 	// Vector2* position will be deleted from memory
 	// if position should not be deleted pass by value.
+	// The parsing is bounded by the map size, if the coordinates
+	// exceed the map bounds returns -1
 	// 
 	// \param position	Value of the position to parse
 	int parsePosition(const Vector2* position);
 
 	// \brief Parses (x, y) coordinates into single value for map vector
+	//
+	// This function should be used when trying to access any node on the maze map.
+	// 
+	// The parsing is bounded by the map size, if the coordinates
+	// exceed the map bounds returns -1
+	//
 	// \param position	Value of the position to parse
 	int parsePosition(const Vector2 position);
 
@@ -141,6 +152,15 @@ public:
 	// amount of neighbours for each node
 	// 
 	// \return std::vector of ints
-	std::vector<int> GetNeighboursMap();
+	std::vector<int> getNeighboursMap();
+
+	// \brief Get a map of the maze 
+	// 
+	// The map returned is a vector of numbers that rapresents the
+	// maze.
+	// 1 means wall 0 means empty space.
+	// 
+	// \return std::vector of ints
+	std::vector<int> getMazeMap();
 };
 

@@ -148,6 +148,7 @@
     <ClCompile Include="MazeHandler.cpp" />
     <ClCompile Include="MazeMap.cpp" />
     <ClCompile Include="MazeNode.cpp" />
+    <ClCompile Include="MazeRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\ImGui-SFML\imconfig-SFML.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="MazeHandler.h" />
     <ClInclude Include="MazeMap.h" />
     <ClInclude Include="MazeNode.h" />
+    <ClInclude Include="MazeRenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
