@@ -28,7 +28,7 @@ MazeNode* MazeNode::getNeighbour(Neighbour neighbour) {
 // \brief Set a neighbour for the node
 // 
 // \param neighbour		Defines where the neighbour to set for the node is
-// \param nodeNeighbour	Defines the neighbour to set for the node
+// \param nodeNeighbour		Defines the neighbour to set for the node
 void MazeNode::setNeighbour(Neighbour neighbour, MazeNode* nodeNeigbour) {
 	neighbours[neighbour] = nodeNeigbour;
 }

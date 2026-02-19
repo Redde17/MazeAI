@@ -16,6 +16,7 @@ struct Vector2 {
 	void setX(const int x);
 	void setY(const int y);
 	void setVector2(const int x, const int y);
+	void setVector2(Vector2 pos);
 };
 
 struct BoundedVector2 : Vector2 {
@@ -34,38 +35,19 @@ struct BoundedVector2 : Vector2 {
 	// \param yBounds	Bounds for the y axis
 	void SetBounds(Vector2* xBounds, Vector2* yBounds);
 
-
-	// \brief Creates a new vector moved by (x, y - 1)
+	// \brief Creates a new vector moved to a specified direction
+	// 
+	// \param direction Value that indicates the direction of movement for the vector
+	// 
 	// \return New moved vector
-	Vector2* moveNorth();
+	Vector2* moveTo(Neighbour direction);
 
-	// \brief Creates a new vector moved by (x, y + 1)
-	// \return New moved vector
-	Vector2* moveSouth();
-
-	// \brief Creates a new vector moved by (x + 1, y)
-	// \return New moved vector
-	Vector2* moveEast();
-
-	// \brief Creates a new vector moved by (x - 1, y)
-	// \return New moved vector
-	Vector2* moveWest();
-
-	// \brief Checks if the vector can move by (x, y - 1)
+	// \brief Checks if the vector can move to the specified direction
+	// 
+	// \param direction Value that indicates the direction of movement for the vector
+	// 
 	// \return bool Result of the check
-	bool canMoveNorth();
-
-	// \brief Checks if the vector can move by (x, y + 1)
-	// \return bool Result of the check
-	bool canMoveSouth();
-
-	// \brief Checks if the vector can move by (x + 1, y)
-	// \return bool Result of the check
-	bool canMoveEast();
-
-	// \brief Checks if the vector can move by (x - 1, y)
-	// \return bool Result of the check
-	bool canMoveWest();
+	bool canMoveTo(Neighbour direction);
 };
 
 class MazeMap {
@@ -115,6 +97,9 @@ public:
 	// 
 	// \param newMazeNode
 	void SetMapNode(const Vector2 position, MazeNode* newMazeNode);
+
+	// \brief Removes all the walls currently in the maze
+	void removeWalls();
 
 	// \brief Parses (x, y) coordinates into single value for map vector
 	// 

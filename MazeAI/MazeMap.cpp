@@ -15,6 +15,11 @@ void Vector2::setVector2(const int x, const int y) {
 	this->y = y;
 }
 
+void Vector2::setVector2(Vector2 pos) {
+	x = pos.x;
+	y = pos.y;
+}
+
 ///BOUNDED VECTOR2 IMPLEMENTATION///
 
 // \brief BoudlessVector2D destructor
@@ -35,125 +40,74 @@ void BoundedVector2::SetBounds(Vector2* xBounds, Vector2* yBounds) {
 	this->yBounds = yBounds;
 }
 
-
-// \brief Creates a new vector moved by (x, y - 1)
+// \brief Creates a new vector moved to a specified direction
+// 
+// \param direction Value that indicates the direction of movement for the vector
+// 
 // \return New moved vector
-Vector2* BoundedVector2::moveNorth() {
-	if (canMoveNorth())
+Vector2* BoundedVector2::moveTo(Neighbour direction) {
+	if (!canMoveTo(direction))
+		return nullptr;
+
+	switch (direction) {
+	case NORTH:
 		return new Vector2(x, y - 1);
-	return nullptr;
-}
 
-// \brief Creates a new vector moved by (x, y + 1)
-// \return New moved vector
-Vector2* BoundedVector2::moveSouth() {
-	if (canMoveSouth())
+	case SOUTH:
 		return new Vector2(x, y + 1);
-	return nullptr;
-}
 
-// \brief Creates a new vector moved by (x + 1, y)
-// \return New moved vector
-Vector2* BoundedVector2::moveEast() {
-	if (canMoveEast())
+	case EAST:
 		return new Vector2(x + 1, y);
-	return nullptr;
-}
 
-// \brief Creates a new vector moved by (x - 1, y)
-// \return New moved vector
-Vector2* BoundedVector2::moveWest() {
-	if (canMoveWest())
+	case WEST:
 		return new Vector2(x - 1, y);
-	return nullptr;
+
+	default:
+		return nullptr;
+	}
 }
 
-// \brief Checks if the vector can move by (x, y - 1)
+// \brief Checks if the vector can move to the specified direction
+// 
+// \param direction Value that indicates the direction of movement for the vector
+// 
 // \return bool Result of the check
-bool BoundedVector2::canMoveNorth() {
-	if ((y - 1) < yBounds->x || (y - 1) > yBounds->y - 1)
-		return false;
-	return true;
-}
+bool BoundedVector2::canMoveTo(Neighbour direction) {
+	switch (direction) {
+		case NORTH:
+			if ((y - 1) < yBounds->x || (y - 1) > yBounds->y - 1)
+				return false;
+			break;
 
-// \brief Checks if the vector can move by (x, y + 1)
-// \return bool Result of the check
-bool BoundedVector2::canMoveSouth() {
-	if ((y + 1) < yBounds->x || (y + 1) > yBounds->y - 1)
-		return false;
-	return true;
-}
+		case SOUTH:
+			if ((y + 1) < yBounds->x || (y + 1) > yBounds->y - 1)
+				return false;
+			break;
 
-// \brief Checks if the vector can move by (x + 1, y)
-// \return bool Result of the check
-bool BoundedVector2::canMoveEast() {
-	if ((x + 1) < xBounds->x || (x + 1) > xBounds->y - 1)
-		return false;
-	return true;
-}
+		case EAST:
+			if ((x + 1) < xBounds->x || (x + 1) > xBounds->y - 1)
+				return false;
+			break;
 
-// \brief Checks if the vector can move by (x - 1, y)
-// \return bool Result of the check
-bool BoundedVector2::canMoveWest() {
-	if ((x - 1) < xBounds->x || (x - 1) > xBounds->y - 1)
-		return false;
+		case WEST:
+			if ((x - 1) < xBounds->x || (x - 1) > xBounds->y - 1)
+				return false;
+			break;
+
+		default:
+			return false;
+	}
 	return true;
 }
 
 ///MAZEMAP IMPLEMENTATION///
-// \brief creates an empty Maze without walls
+// \brief creates an empty Maze with all the walls
 // 
 // \param mapSize	Defines the width and height of the map
 MazeMap::MazeMap(const Vector2 mapSize) : mapSize_(mapSize) {
 	// Creates a connectionless vector of nodes
 	for (size_t i = 0; i < mapSize_.x * mapSize_.y; i++)
 		map_.push_back(new MazeNode());
-
-	//Connects all nodes between eachother to create a planar graph
-	//TODO: Multithread implementation
-
-	//Bounded vector2 for cheking bounds of the node while retrieving neighboars
-	BoundedVector2* boundedPos = new BoundedVector2(0, 0);
-	boundedPos->SetBounds(new Vector2(0, mapSize_.x), new Vector2(0, mapSize_.y));
-	Vector2* neighbourNodePosition;
-	MazeNode* neighbourNode;
-	
-	//for each neighbour, retrieve it if possible and create connection with it
-	//otherwise set neighbour to nullptr
-	for (size_t x = 0; x < mapSize_.x; x++) {
-		for (size_t y = 0; y < mapSize_.y; y++) {
-			boundedPos->setVector2(x, y);
-			
-			//Check north
-			if (neighbourNodePosition = boundedPos->moveNorth())
-				neighbourNode = map_[parsePosition(neighbourNodePosition)];
-			else
-				neighbourNode = nullptr;
-			
-			map_[parsePosition(Vector2(x, y))]->setNeighbour(NORTH, neighbourNode);
-			//Check sud
-			if (neighbourNodePosition = boundedPos->moveSouth())
-				neighbourNode = map_[parsePosition(neighbourNodePosition)];
-			else 
-				neighbourNode = nullptr;
-			map_[parsePosition(Vector2(x, y))]->setNeighbour(SOUTH, neighbourNode);
-
-			//Check east
-			if (neighbourNodePosition = boundedPos->moveEast())
-				neighbourNode = map_[parsePosition(neighbourNodePosition)];
-			else
-				neighbourNode = nullptr;
-			map_[parsePosition(Vector2(x, y))]->setNeighbour(EAST, neighbourNode);
-
-			//Check west
-			if (neighbourNodePosition = boundedPos->moveWest())
-				neighbourNode = map_[parsePosition(neighbourNodePosition)];
-			else 
-				neighbourNode = nullptr;
-			map_[parsePosition(Vector2(x, y))]->setNeighbour(WEST, neighbourNode);
-		}
-	}
-
 }
 
 // \brief Get the pointer to the vector storing the map
@@ -203,6 +157,54 @@ MazeNode* MazeMap::GetMazeNode(const Vector2 position) {
 // \param newMazeNode
 void MazeMap::SetMapNode(const Vector2 position, MazeNode* newMazeNode) {
 	map_[parsePosition(position)] = newMazeNode;
+}
+
+// \brief Removes all the walls currently in the maze
+void MazeMap::removeWalls() {
+	//Connects all nodes between eachother to create a planar graph
+	//TODO: Multithread implementation
+
+	//Bounded vector2 for cheking bounds of the node while retrieving neighboars
+	BoundedVector2* boundedPos = new BoundedVector2(0, 0);
+	boundedPos->SetBounds(new Vector2(0, mapSize_.x), new Vector2(0, mapSize_.y));
+	Vector2* neighbourNodePosition;
+	MazeNode* neighbourNode;
+
+	//for each neighbour, retrieve it if possible and create connection with it
+	//otherwise set neighbour to nullptr
+	for (size_t x = 0; x < mapSize_.x; x++) {
+		for (size_t y = 0; y < mapSize_.y; y++) {
+			boundedPos->setVector2(x, y);
+
+			//Check north
+			if (neighbourNodePosition = boundedPos->moveTo(NORTH))
+				neighbourNode = map_[parsePosition(neighbourNodePosition)];
+			else
+				neighbourNode = nullptr;
+
+			map_[parsePosition(Vector2(x, y))]->setNeighbour(NORTH, neighbourNode);
+			//Check sud
+			if (neighbourNodePosition = boundedPos->moveTo(SOUTH))
+				neighbourNode = map_[parsePosition(neighbourNodePosition)];
+			else
+				neighbourNode = nullptr;
+			map_[parsePosition(Vector2(x, y))]->setNeighbour(SOUTH, neighbourNode);
+
+			//Check east
+			if (neighbourNodePosition = boundedPos->moveTo(EAST))
+				neighbourNode = map_[parsePosition(neighbourNodePosition)];
+			else
+				neighbourNode = nullptr;
+			map_[parsePosition(Vector2(x, y))]->setNeighbour(EAST, neighbourNode);
+
+			//Check west
+			if (neighbourNodePosition = boundedPos->moveTo(WEST))
+				neighbourNode = map_[parsePosition(neighbourNodePosition)];
+			else
+				neighbourNode = nullptr;
+			map_[parsePosition(Vector2(x, y))]->setNeighbour(WEST, neighbourNode);
+		}
+	}
 }
 
 // \brief Parses (x, y) coordinates into single value for map vector

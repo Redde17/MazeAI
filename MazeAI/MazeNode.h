@@ -44,7 +44,7 @@ public:
 	// \brief Set a neighbour for the node
 	// 
 	// \param neighbour		Defines where the neighbour to set for the node is
-	// \param nodeNeighbour	Defines the neighbour to set for the node
+	// \param nodeNeighbour		Defines the neighbour to set for the node
 	void setNeighbour(Neighbour neighbour, MazeNode* nodeNeigbour);
 
 	// \brief Set all the neighbours for the node
@@ -52,7 +52,7 @@ public:
 	// The neighbours are pointers to other MazeNodes near the current one
 	// 
 	// \param northNeigbour	pointer to the neighbour above the current node
-	// \param southNeigbour pointer to the neighbour below the current node
+	// \param southNeigbour	pointer to the neighbour below the current node
 	// \param eastNeigbour	pointer to the neighbour right of the current node
 	// \param westNeigbour	pointer to the neighbour left of the current node
 	void setNeighbours(
