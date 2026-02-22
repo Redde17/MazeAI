@@ -1,6 +1,7 @@
 #pragma once
 #include "MazeMap.h"
 
+//Generation class containing all maze generation functions 
 class MazeGenerator {
 private:
 	struct Neighbour {

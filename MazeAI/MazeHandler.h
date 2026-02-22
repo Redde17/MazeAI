@@ -2,7 +2,7 @@
 #include <mutex>
 #include "MazeMap.h"
 
-//Singleton
+//Singleton for accessing the maze
 class MazeHandler {
 public:
     enum MazeGeneratorSelector {
@@ -14,7 +14,6 @@ private:
 	static std::mutex mutex_;		//Multi threading safe mechanism
 
     MazeMap* mazeMap;
-
 protected:
     const std::string value_;
 

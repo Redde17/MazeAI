@@ -1,50 +1,29 @@
 #include <iostream>
 
-#include <SFML/Graphics.hpp>
-
-#include "imgui.h"
-#include "imgui-SFML.h"
-
 #include "MazeHandler.h"
 #include "MazeMap.h"
 #include "MazeRenderer.h"
+#include "GuiHandler.h"
 
-#define SIZE_X 25
-#define SIZE_Y 25
-
-void drawImGui(sf::Sprite* sprite);
-void sideBar();
-void mainRenderWindow(sf::Sprite* sprite);
-void debugWindow(std::string intMazeMap);
-
-MazeHandler* MH = MazeHandler::GetInstance();
+#define DEFAULT_SIZE_X 25
+#define DEFAULT_SIZE_Y 25
 
 int main() {
-    MH->generateEmptyMazeMap(Vector2(SIZE_X, SIZE_Y));
+    //Get instance of MazeHandler singleton
+    MazeHandler* MH = MazeHandler::GetInstance();
+    
+    //generate a maze map
+    MH->generateEmptyMazeMap(Vector2(DEFAULT_SIZE_X, DEFAULT_SIZE_Y));
     MH->generateMazeMap(MazeHandler::DepthFirstSearch);
+
+    //Get gui handler singleton reference
+    GuiHandler* GH = GuiHandler::GetInstance();
+
     MazeRenderer mazeRenderer(MH->getMazeMap(), 40.f);
-
-    //DEBUG
-    std::string intMazeMap;
-    std::vector<int> mazeMap = MH->getMazeMap()->getMazeMap();
-    int counter = 0;
-    for (int x : mazeMap) {
-        if (counter == SIZE_Y * 3) {
-            intMazeMap.append("\n");
-            //std::cout << std::endl;
-            counter = 0;
-        }
-        if (x)
-            intMazeMap.append("#");
-        else
-            intMazeMap.append(" ");
-        counter++;
-    }
-
 
     //Define window with settings
     sf::ContextSettings settings;
-    //settings.antiAliasingLevel = 8;
+    settings.antiAliasingLevel = 8;
 
     //set window size to half the size of the monitor
     sf::VideoMode windowSize = sf::VideoMode({ 
@@ -82,8 +61,7 @@ int main() {
         ImGui::DockSpaceOverViewport();
 
         //Draw all the ImGui windows
-        drawImGui(mazeRenderer.getMazeSprite());
-        debugWindow(intMazeMap);
+        GH->drawAll(mazeRenderer.getMazeSprite());
 
         //Clear window for next frame render
         window.clear();
@@ -94,28 +72,4 @@ int main() {
 
     ImGui::SFML::Shutdown();
     return 0;
-}
-
-//ImGui windows
-void drawImGui(sf::Sprite* sprite) {
-    sideBar();
-    mainRenderWindow(sprite);
-}
-
-void sideBar() {
-    ImGui::Begin("test");
-    ImGui::Text("test test test");
-    ImGui::End();
-}
-
-void mainRenderWindow(sf::Sprite* sprite) {
-    ImGui::Begin("Maze", NULL, ImGuiWindowFlags_HorizontalScrollbar);
-    ImGui::Image(*sprite);
-    ImGui::End();
-}
-
-void debugWindow(std::string intMazeMap) {
-    ImGui::Begin("Debug Window");
-    ImGui::Text(intMazeMap.data());
-    ImGui::End();
 }

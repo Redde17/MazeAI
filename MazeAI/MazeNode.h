@@ -11,6 +11,7 @@ enum Direction {
 	WEST
 };
 
+// Class for the maze node contained inside the maze map
 class MazeNode {
 private:
 	std::array<MazeNode*, NEIGHBOURS> neighbours;

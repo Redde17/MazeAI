@@ -50,7 +50,6 @@ void MazeGenerator::exploreNodeDFS(std::vector<int>* mazeFogMap, MazeMap* mazeMa
 	std::vector<Neighbour> availableNeighbours = getAvailableNeighbours(
 		mazeMap,
 		mazeFogMap,
-		&availableNeighbours,
 		&currentNodePos
 	);
 

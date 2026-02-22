@@ -26,6 +26,19 @@ void Vector2::operator=(const Vector2 other) {
 	this->y = other.y;
 }
 
+// \brief Overload of operator !=
+bool Vector2::operator!=(const Vector2 other) {
+	if (this->x != other.x || this->y != other.y)
+		return true;
+	return false;
+}
+// \brief Overload of operator ==
+bool Vector2::operator==(const Vector2 other) {
+	if (this->x == other.x && this->y == other.y)
+		return true;
+	return false;
+}
+
 ///BOUNDED VECTOR2 IMPLEMENTATION///
 
 // \brief Sets the bounds for the vector

@@ -25,6 +25,30 @@
     <Filter Include="Header Files\ImGui">
       <UniqueIdentifier>{a54650c3-05f8-4773-b6bc-5d9e18a0c55f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\User Interface">
+      <UniqueIdentifier>{b84a2611-28ea-44e3-bfea-f30f1e7255f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Maze Elements">
+      <UniqueIdentifier>{fb383599-98d1-4b74-ab95-dbf7a10a600d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Maze Elements\Rendering">
+      <UniqueIdentifier>{1aa82ffb-117a-48f6-b062-940fe3526234}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Maze Elements\Generation">
+      <UniqueIdentifier>{5cea3f1b-2791-40c7-9da9-584989bcbeb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Maze Elements">
+      <UniqueIdentifier>{1f03ca48-669a-4dc3-825c-3a859b086f1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\User Interface">
+      <UniqueIdentifier>{3832985d-b078-46d1-8787-1a7705ed8557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Maze Elements\Generation">
+      <UniqueIdentifier>{22cb0579-8bed-4bcc-94cf-19e259ccd632}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Maze Elements\Rendering">
+      <UniqueIdentifier>{d8066c42-6796-4206-80e6-9353b9addf94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -46,19 +70,22 @@
       <Filter>Source Files\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="MazeHandler.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Maze Elements</Filter>
     </ClCompile>
     <ClCompile Include="MazeMap.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Maze Elements</Filter>
     </ClCompile>
     <ClCompile Include="MazeNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MazeGenerator.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Maze Elements</Filter>
     </ClCompile>
     <ClCompile Include="MazeRenderer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Maze Elements\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="MazeGenerator.cpp">
+      <Filter>Source Files\Maze Elements\Generation</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiHandler.cpp">
+      <Filter>Source Files\User Interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -77,20 +104,23 @@
     <ClInclude Include="..\lib\ImGui\imgui.h">
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="MazeHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MazeMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MazeNode.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GuiHandler.h">
+      <Filter>Header Files\User Interface</Filter>
     </ClInclude>
     <ClInclude Include="MazeGenerator.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Maze Elements\Generation</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeHandler.h">
+      <Filter>Header Files\Maze Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeMap.h">
+      <Filter>Header Files\Maze Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeNode.h">
+      <Filter>Header Files\Maze Elements</Filter>
     </ClInclude>
     <ClInclude Include="MazeRenderer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Maze Elements\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

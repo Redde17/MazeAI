@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "MazeMap.h"
 
-
+// Rendere class to draw the maze on screen with SFML
 class MazeRenderer
 {
 private:

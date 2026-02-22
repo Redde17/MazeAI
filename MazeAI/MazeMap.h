@@ -3,6 +3,7 @@
 
 #include "MazeNode.h"
 
+//Struct for bidimensional vector rappresentation
 struct Vector2 {
 	int x;
 	int y;
@@ -24,8 +25,13 @@ struct Vector2 {
 
 	// \brief Overload of operator =
 	void operator=(const Vector2 other);
+	// \brief Overload of operator !=
+	bool operator!=(const Vector2 other);
+	// \brief Overload of operator ==
+	bool operator==(const Vector2 other);
 };
 
+//Struct extending vector2 by adding upper and lower bounds to the axis
 struct BoundedVector2 : Vector2 {
 	Vector2 xBounds;
 	Vector2 yBounds;
@@ -59,6 +65,7 @@ struct BoundedVector2 : Vector2 {
 	void operator=(const BoundedVector2 other);
 };
 
+// Maze map class for map manipulation and access 
 class MazeMap {
 private:
 	const Vector2 mapSize_;			//Vector2 containing the map size
