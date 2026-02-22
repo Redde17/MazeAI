@@ -62,5 +62,5 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
-
-lib/* linguist-vendored
+# Apply override to all files and directories in the directory to exclude them from Linguist check
+lib/** linguist-vendored
