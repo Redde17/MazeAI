@@ -4,7 +4,7 @@
 #define NEIGHBOURS 4
 
 //enum for the possible neghbours directions in a square maze
-enum Neighbour {
+enum Direction {
 	NORTH,
 	SOUTH,
 	EAST,
@@ -39,13 +39,13 @@ public:
 	// \param neighbour	Defines the neighbour to get from the node
 	// 
 	// \return MazeNode* pointer to the neighbouring node
-	MazeNode* getNeighbour(Neighbour neighbour);
+	MazeNode* getNeighbour(Direction neighbour);
 
 	// \brief Set a neighbour for the node
 	// 
 	// \param neighbour		Defines where the neighbour to set for the node is
 	// \param nodeNeighbour		Defines the neighbour to set for the node
-	void setNeighbour(Neighbour neighbour, MazeNode* nodeNeigbour);
+	void setNeighbour(Direction neighbour, MazeNode* nodeNeigbour);
 
 	// \brief Set all the neighbours for the node
 	// 
@@ -65,10 +65,15 @@ public:
 	// \brief Remove a neighbour from the node
 	// 
 	// \param neighbour	Defines the neighbour to remove from the node
-	void removeNeighbour(Neighbour neighbour);
+	void removeNeighbour(Direction neighbour);
 
 	// \brief Gets the amount of neighbours of the node
 	// 
 	// \return Integer for the amount of neighbours
 	int getNeighboursAmount();
+
+	// \brief Gets the opposite of a direction
+	// \param Direction to invert
+	// \return Direction inverted direction
+	static Direction getOppositeDirection(Direction direction);
 };

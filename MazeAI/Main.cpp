@@ -21,6 +21,7 @@ MazeHandler* MH = MazeHandler::GetInstance();
 
 int main() {
     MH->generateEmptyMazeMap(Vector2(SIZE_X, SIZE_Y));
+    MH->generateMazeMap(MazeHandler::DepthFirstSearch);
     MazeRenderer mazeRenderer(MH->getMazeMap(), 40.f);
 
     //DEBUG

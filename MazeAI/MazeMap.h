@@ -7,24 +7,30 @@ struct Vector2 {
 	int x;
 	int y;
 
+	Vector2() {
+		x = y = 0;
+	}
+
 	Vector2(const int x, const int y) {
 		this->x = x;
 		this->y = y;
 	}
-	
+
 	//Setters
 	void setX(const int x);
 	void setY(const int y);
 	void setVector2(const int x, const int y);
 	void setVector2(Vector2 pos);
+
+	// \brief Overload of operator =
+	void operator=(const Vector2 other);
 };
 
 struct BoundedVector2 : Vector2 {
-	Vector2* xBounds;
-	Vector2* yBounds;
+	Vector2 xBounds;
+	Vector2 yBounds;
 
 	using Vector2::Vector2;
-	~BoundedVector2();
 
 	// \brief Sets the bounds for the vector
 	// 
@@ -33,21 +39,24 @@ struct BoundedVector2 : Vector2 {
 	// 
 	// \param xBounds	Bounds for the x axis
 	// \param yBounds	Bounds for the y axis
-	void SetBounds(Vector2* xBounds, Vector2* yBounds);
+	void SetBounds(Vector2 xBounds, Vector2 yBounds);
 
 	// \brief Creates a new vector moved to a specified direction
 	// 
 	// \param direction Value that indicates the direction of movement for the vector
 	// 
 	// \return New moved vector
-	Vector2* moveTo(Neighbour direction);
+	Vector2* moveTo(Direction direction);
 
 	// \brief Checks if the vector can move to the specified direction
 	// 
 	// \param direction Value that indicates the direction of movement for the vector
 	// 
 	// \return bool Result of the check
-	bool canMoveTo(Neighbour direction);
+	bool canMoveTo(Direction direction);
+
+	// \brief Overload of operator =
+	void operator=(const BoundedVector2 other);
 };
 
 class MazeMap {

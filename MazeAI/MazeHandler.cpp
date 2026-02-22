@@ -1,4 +1,5 @@
 #include "MazeHandler.h"
+#include "MazeGenerator.h"
 
 MazeHandler* MazeHandler::instance_{ nullptr };
 std::mutex MazeHandler::mutex_;
@@ -47,4 +48,17 @@ void MazeHandler::generateEmptyMazeMap(const Vector2* mapSize) {
 // \param mapSize Vector2 with map size passed by value
 void MazeHandler::generateEmptyMazeMap(const Vector2 mapSize) {
     mazeMap = new MazeMap(mapSize);
+}
+
+// \brief Generates a maze trough a generating algorithm
+// \param mazeGenerator selector for the type of maze generation
+void MazeHandler::generateMazeMap(MazeGeneratorSelector mazeGenerator, Vector2 startPos) {
+    switch (mazeGenerator){
+        case MazeHandler::DepthFirstSearch:
+            MazeGenerator::generateMazeDFS(mazeMap, startPos);
+            break;
+
+        default:
+            break;
+    }
 }

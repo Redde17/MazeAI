@@ -4,6 +4,11 @@
 
 //Singleton
 class MazeHandler {
+public:
+    enum MazeGeneratorSelector {
+        DepthFirstSearch
+    };
+
 private:
 	static MazeHandler* instance_;	//MapHandler singleton instance
 	static std::mutex mutex_;		//Multi threading safe mechanism
@@ -39,5 +44,8 @@ public:
     // \param mapSize Vector2 with map size passed by value
     void generateEmptyMazeMap(const Vector2 mapSize);
 
+    // \brief Generates a maze trough a generating algorithm
+    // \param mazeGenerator selector for the type of maze generation
+    void generateMazeMap(MazeGeneratorSelector mazeGenerator, Vector2 startPos = Vector2(0, 0));
 };
 

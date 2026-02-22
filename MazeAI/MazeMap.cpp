@@ -20,13 +20,13 @@ void Vector2::setVector2(Vector2 pos) {
 	y = pos.y;
 }
 
-///BOUNDED VECTOR2 IMPLEMENTATION///
-
-// \brief BoudlessVector2D destructor
-BoundedVector2::~BoundedVector2() {
-	delete xBounds;
-	delete yBounds;
+// \brief Overload of operator =
+void Vector2::operator=(const Vector2 other) {
+	this->x = other.x;
+	this->y = other.y;
 }
+
+///BOUNDED VECTOR2 IMPLEMENTATION///
 
 // \brief Sets the bounds for the vector
 // 
@@ -35,7 +35,7 @@ BoundedVector2::~BoundedVector2() {
 // 
 // \param xBounds	Bounds for the x axis
 // \param yBounds	Bounds for the y axis
-void BoundedVector2::SetBounds(Vector2* xBounds, Vector2* yBounds) {
+void BoundedVector2::SetBounds(Vector2 xBounds, Vector2 yBounds) {
 	this->xBounds = xBounds;
 	this->yBounds = yBounds;
 }
@@ -45,7 +45,7 @@ void BoundedVector2::SetBounds(Vector2* xBounds, Vector2* yBounds) {
 // \param direction Value that indicates the direction of movement for the vector
 // 
 // \return New moved vector
-Vector2* BoundedVector2::moveTo(Neighbour direction) {
+Vector2* BoundedVector2::moveTo(Direction direction) {
 	if (!canMoveTo(direction))
 		return nullptr;
 
@@ -72,25 +72,25 @@ Vector2* BoundedVector2::moveTo(Neighbour direction) {
 // \param direction Value that indicates the direction of movement for the vector
 // 
 // \return bool Result of the check
-bool BoundedVector2::canMoveTo(Neighbour direction) {
+bool BoundedVector2::canMoveTo(Direction direction) {
 	switch (direction) {
 		case NORTH:
-			if ((y - 1) < yBounds->x || (y - 1) > yBounds->y - 1)
+			if ((y - 1) < yBounds.x || (y - 1) > yBounds.y - 1)
 				return false;
 			break;
 
 		case SOUTH:
-			if ((y + 1) < yBounds->x || (y + 1) > yBounds->y - 1)
+			if ((y + 1) < yBounds.x || (y + 1) > yBounds.y - 1)
 				return false;
 			break;
 
 		case EAST:
-			if ((x + 1) < xBounds->x || (x + 1) > xBounds->y - 1)
+			if ((x + 1) < xBounds.x || (x + 1) > xBounds.y - 1)
 				return false;
 			break;
 
 		case WEST:
-			if ((x - 1) < xBounds->x || (x - 1) > xBounds->y - 1)
+			if ((x - 1) < xBounds.x || (x - 1) > xBounds.y - 1)
 				return false;
 			break;
 
@@ -98,6 +98,14 @@ bool BoundedVector2::canMoveTo(Neighbour direction) {
 			return false;
 	}
 	return true;
+}
+
+// \brief Overload of operator =
+void BoundedVector2::operator=(const BoundedVector2 other) {
+	this->x = other.x;
+	this->y = other.y;
+	this->xBounds = other.xBounds;
+	this->yBounds = other.yBounds;
 }
 
 ///MAZEMAP IMPLEMENTATION///
@@ -166,7 +174,7 @@ void MazeMap::removeWalls() {
 
 	//Bounded vector2 for cheking bounds of the node while retrieving neighboars
 	BoundedVector2* boundedPos = new BoundedVector2(0, 0);
-	boundedPos->SetBounds(new Vector2(0, mapSize_.x), new Vector2(0, mapSize_.y));
+	boundedPos->SetBounds(Vector2(0, mapSize_.x), Vector2(0, mapSize_.y));
 	Vector2* neighbourNodePosition;
 	MazeNode* neighbourNode;
 

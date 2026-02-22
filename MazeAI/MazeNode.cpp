@@ -21,7 +21,7 @@ MazeNode::MazeNode(MazeNode* northNeigbour, MazeNode* southNeigbour, MazeNode* e
 // \param neighbour	Defines the neighbour to get from the node
 // 
 // \return MazeNode* pointer to the neighbouring node
-MazeNode* MazeNode::getNeighbour(Neighbour neighbour) {
+MazeNode* MazeNode::getNeighbour(Direction neighbour) {
 	return neighbours[neighbour];
 }
 
@@ -29,7 +29,7 @@ MazeNode* MazeNode::getNeighbour(Neighbour neighbour) {
 // 
 // \param neighbour		Defines where the neighbour to set for the node is
 // \param nodeNeighbour		Defines the neighbour to set for the node
-void MazeNode::setNeighbour(Neighbour neighbour, MazeNode* nodeNeigbour) {
+void MazeNode::setNeighbour(Direction neighbour, MazeNode* nodeNeigbour) {
 	neighbours[neighbour] = nodeNeigbour;
 }
 
@@ -51,7 +51,7 @@ void MazeNode::setNeighbours(MazeNode* northNeigbour, MazeNode* southNeigbour, M
 // \brief Remove a neighbour from the node
 // 
 // \param neighbour	Defines the neighbour to remove from the node
-void MazeNode::removeNeighbour(Neighbour neighbour) {
+void MazeNode::removeNeighbour(Direction neighbour) {
 	neighbours[neighbour] = nullptr;
 }
 
@@ -66,4 +66,24 @@ int MazeNode::getNeighboursAmount() {
 			amount++;
 
 	return amount;
+}
+
+// \brief Gets the opposite of a direction
+// \param Direction to invert
+// \return Direction inverted direction
+Direction MazeNode::getOppositeDirection(Direction direction) {
+	switch (direction)
+	{
+	case NORTH:
+		return SOUTH;
+
+	case SOUTH:
+		return NORTH;
+
+	case EAST:
+		return WEST;
+		
+	case WEST:
+		return EAST;
+	}
 }
