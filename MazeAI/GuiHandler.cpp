@@ -1,6 +1,9 @@
 
-#include "GuiHandler.h"
 #include <iostream>
+
+#include "GuiHandler.h"
+
+
 
 GuiHandler* GuiHandler::instance_{ nullptr };
 std::mutex GuiHandler::mutex_;
@@ -8,6 +11,7 @@ std::mutex GuiHandler::mutex_;
 //GuiHandler constructor
 GuiHandler::GuiHandler() {
     MH = MH->GetInstance();
+    MR = nullptr;
     //size = Vector2(
     //    MH->getMazeMap()->getMapSize().x,
     //    MH->getMazeMap()->getMapSize().y
@@ -31,6 +35,18 @@ GuiHandler* GuiHandler::GetInstance() {
     return instance_;
 }
 
+// \brief Setter for the maze renderer
+// \param mazeRenderer: Pointer to the maze renderer to set
+void GuiHandler::setMazeRenderer(MazeRenderer* mazeRenderer) {
+    MR = mazeRenderer;
+}
+
+// \brief Getter of the maze renderer
+// \return MazeRenderer*: Pointer to the maze renderer used by the Gui Handler
+MazeRenderer* GuiHandler::getMazeRenderer() {
+    return MR;
+}
+
 // \brief Draws all the UI elements that do not require data connection
 // \param *sprite: Reference to the sprite to be drawn inside the RenderWindow
 void GuiHandler::drawAll(sf::Sprite* sprite) {
@@ -41,17 +57,13 @@ void GuiHandler::drawAll(sf::Sprite* sprite) {
 
 // \brief Draws the window with all the maze settings
 void GuiHandler::drawMazeSettings() {
+    ImGui::Begin("Maze Settings");
+
     //Size input variables
     static Vector2 size(
         MH->getMazeMap()->getMapSize().x,
         MH->getMazeMap()->getMapSize().y
     );
-
-    //Generation algorithm selector variables
-    static const char* current_item = generationSelectorItems[0];
-    static int generationSelection = 0;
-
-    ImGui::Begin("Maze Settings");
 
     ///Input field size change
     ImGui::PushItemWidth(120.f);
@@ -67,6 +79,11 @@ void GuiHandler::drawMazeSettings() {
     ImGui::SameLine();
     ImGui::InputInt("##02", &size.y);
     
+
+    //Generation algorithm selector variables
+    static const char* current_item = generationSelectorItems[0];
+    static int generationSelection = 0;
+
     ///Generation algorithm selector
     ImGui::PopItemWidth();
     ImGui::Text("\nMaze generation method:");
@@ -87,8 +104,6 @@ void GuiHandler::drawMazeSettings() {
         ImGui::EndCombo();
     }
 
-    //cell display size
-
     //Generate Maze button
     ImGui::Text("\n");
     if (ImGui::Button("Generate Maze")) {
@@ -104,6 +119,21 @@ void GuiHandler::drawMazeSettings() {
                 break;
         }
     }
+
+    //Cell display size for the maze
+    static float renderSize = 40.f;
+    static float oldRenderSize = renderSize;
+
+    ImGui::Text("\nMaze zoom:");
+    ImGui::SliderFloat("##FloatSlider", &renderSize, 1.0f, 50.0f);
+
+    if (renderSize != oldRenderSize) {
+        //render size changed
+        MR->resize(renderSize);
+
+        oldRenderSize = renderSize;
+    }
+
     ImGui::End();
 }
 

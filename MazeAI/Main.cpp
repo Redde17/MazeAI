@@ -20,6 +20,8 @@ int main() {
 
     MazeRenderer mazeRenderer(MH->getMazeMap(), 40.f);
 
+    GH->setMazeRenderer(&mazeRenderer);
+
     //Adds mazeRenderer as an observer for the mazeHandler in case of map changes for redrawing
     MH->addObserver(mazeRenderer);
 

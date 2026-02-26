@@ -143,8 +143,8 @@ void MazeRenderer::generateMazeTexture() {
 		}
 	}
 
-	std::cout << "DEBUG: vertexCounter[" << vertexCounter << "]" << std::endl;
-	std::cout << "DEBUG: Expected vortex count[" << mapSize.x * mapSize.y * (6 * 5) << "]" << std::endl;
+	//std::cout << "DEBUG: vertexCounter[" << vertexCounter << "]" << std::endl;
+	//std::cout << "DEBUG: Expected vortex count[" << mapSize.x * mapSize.y * (6 * 5) << "]" << std::endl;
 
 	//render vertexMap into a texture
 	sf::Vector2u mazeTextureSize(
