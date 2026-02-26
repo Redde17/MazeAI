@@ -10,8 +10,13 @@ private:
 	static GuiHandler* instance_;	//GuiHandler singleton instance
 	static std::mutex mutex_;		//Multi threading safe mechanism
 
+	//Items for drop down menu selector
+	const char* generationSelectorItems[2] = {
+		"Empty",
+		"Depth First Search"
+	};
+
 	MazeHandler* MH;
-	Vector2 size;
 protected:
 	//GuiHandler constructor
 	GuiHandler();
@@ -41,6 +46,12 @@ public:
 	void drawDebugWindow();
 
 private:
-	void onChangeMazeSizeButtonClick(const Vector2 newSize);
+	// \brief Event on the click of Generate Maze button
+	// 
+	// On generate maze button click generate a new maze with selected generator and with new size 
+	// 
+	// \param newSize: Size to use for the new maze
+	// \param mazeGenereatorSelector: Generation type for the new maze
+	void onGenerateMazeButtonClick(const Vector2 newSize, MazeHandler::MazeGeneratorSelector mazeGenereatorSelector);
 };
 

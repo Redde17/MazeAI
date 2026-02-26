@@ -8,10 +8,10 @@ std::mutex GuiHandler::mutex_;
 //GuiHandler constructor
 GuiHandler::GuiHandler() {
     MH = MH->GetInstance();
-    size = Vector2(
-        MH->getMazeMap()->getMapSize().x,
-        MH->getMazeMap()->getMapSize().y
-    );
+    //size = Vector2(
+    //    MH->getMazeMap()->getMapSize().x,
+    //    MH->getMazeMap()->getMapSize().y
+    //);
 }
 
 //GuiHandler distructor
@@ -41,21 +41,25 @@ void GuiHandler::drawAll(sf::Sprite* sprite) {
 
 // \brief Draws the window with all the maze settings
 void GuiHandler::drawMazeSettings() {
-    Vector2 oldSize(
+    //Size input variables
+    static Vector2 size(
         MH->getMazeMap()->getMapSize().x,
         MH->getMazeMap()->getMapSize().y
     );
 
+    //Generation algorithm selector variables
+    static const char* current_item = generationSelectorItems[0];
+    static int generationSelection = 0;
+
     ImGui::Begin("Maze Settings");
 
-    //Input field size change
+    ///Input field size change
     ImGui::PushItemWidth(120.f);
-
+    ImGui::Text("Maze size:");
     //X size input field
     ImGui::Text("x:");
     ImGui::SameLine();
     ImGui::InputInt("##01", &size.x);
-
     ImGui::SameLine();
 
     //Y size input field
@@ -63,20 +67,43 @@ void GuiHandler::drawMazeSettings() {
     ImGui::SameLine();
     ImGui::InputInt("##02", &size.y);
     
+    ///Generation algorithm selector
+    ImGui::PopItemWidth();
+    ImGui::Text("\nMaze generation method:");
 
-    if (ImGui::Button("Change Size")) {
-        //check if size has changed before handling the click
-        if (size != oldSize) {
-            onChangeMazeSizeButtonClick(size);
-            oldSize = size;
+    //Drop down menu with generationSelectorItems[] for items
+    if (ImGui::BeginCombo("##combo", current_item)) // The second parameter is the label previewed before opening the combo.
+    {
+        for (int n = 0; n < IM_ARRAYSIZE(generationSelectorItems); n++) {
+            bool is_selected = (current_item == generationSelectorItems[n]);
+            if (ImGui::Selectable(generationSelectorItems[n], is_selected)) {
+                current_item = generationSelectorItems[n];
+                generationSelection = n;
+            }
+
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
         }
+        ImGui::EndCombo();
     }
 
     //cell display size
 
-
-    //generation algorithm selection
-
+    //Generate Maze button
+    ImGui::Text("\n");
+    if (ImGui::Button("Generate Maze")) {
+        switch (generationSelection) {
+            case 0:
+                onGenerateMazeButtonClick(size, MazeHandler::Empty);
+                break;
+            case 1:
+                onGenerateMazeButtonClick(size, MazeHandler::DepthFirstSearch);
+                break;
+            default:
+                onGenerateMazeButtonClick(size, MazeHandler::Empty);
+                break;
+        }
+    }
     ImGui::End();
 }
 
@@ -96,16 +123,16 @@ void GuiHandler::drawDebugWindow() {
     ImGui::End();
 }
 
-void GuiHandler::onChangeMazeSizeButtonClick(const Vector2 newSize) {
-    std::cout << "DEBUG: onChangeMazeSizeButtonClick ";
-    std::cout << "x[" << newSize.x << "] ";
-    std::cout << "y[" << newSize.y << "] ";
-    std::cout << std::endl;
-    //Create a new maze with a new size
-    
-    //New maze gets generated but not redrawn 
+// \brief Event on the click of Generate Maze button
+// 
+// On generate maze button click generate a new maze with selected generator and with new size 
+// 
+// \param newSize: Size to use for the new maze
+// \param mazeGenereatorSelector: Generation type for the new maze
+void GuiHandler::onGenerateMazeButtonClick(const Vector2 newSize, MazeHandler::MazeGeneratorSelector mazeGenereatorSelector) {
+    //generate new Maze with passed parameters from the UI
+    MH->generateMazeMap(mazeGenereatorSelector, newSize);
 
-    MH->generateMazeMap(MazeHandler::Empty, newSize);
-
+    //Notify observers of MazeHandler of change
     MH->notify();
 }
