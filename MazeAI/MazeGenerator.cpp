@@ -2,145 +2,176 @@
 #include <time.h>
 #include <algorithm>
 #include <random>
+#include <stack>
 
 //pseudo-random number generator
 std::random_device rd;
 std::mt19937 g(rd());
 
+///Neighbour struct implementation
+
+// \brief Neighbour struct empty constructor
+MazeGenerator::Neighbour::Neighbour() {
+	node = nullptr;
+	position = Vector2(0, 0);
+	directionFromNode = NORTH;
+}
+
+// \brief Neighbour struct constructor
+// 
+// \param *node: Pointer to a maze node
+// \param position: Position of the maze node
+// \param directionFromNode: Direction in relation to a node
+MazeGenerator::Neighbour::Neighbour(MazeNode* node, Vector2 position, Direction positionFromNode) {
+	this->node = node;
+	this->position = position;
+	this->directionFromNode = positionFromNode;
+}
+
+///VisitedNode struct implementation
+// \brief VisistedNode constructor
+// \param *node: Pointer to the maze node
+// \param position: Position of the maze node
+MazeGenerator::VisitedNode::VisitedNode(MazeNode* node, const Vector2 position) {
+	this->node = node;
+	this->position = position;
+}
+
+///MazeGenerator class implementation
 // \brief Generates a maze from a given empty map using randomized depth-first search
 // 
-// \param mazeMap pointer to an empty map
+// \param mazeMap: Pointer to an empty map
+// \param startPos: Starting position for the algorithm
 //
-// \return bool: true if generation has been completed false otherwise
+// \return bool: True if generation has been completed False otherwise
 void MazeGenerator::generateMazeDFS(MazeMap* mazeMap, const Vector2 startPos) {
-	srand(time(0));
-	
 	//create array to store visited nodes
 	//0 = not visited
 	//1 = visited
 	Vector2 mapSize = mazeMap->getMapSize();
 	std::vector<int> mazeFogMap(mapSize.x * mapSize.y);
 
-	//create bounded vector2 for bounded maze movement
-	BoundedVector2 boundedStartPos(startPos.x, startPos.y);
-	boundedStartPos.setBounds(
-		Vector2(0, mapSize.x),
-		Vector2(0, mapSize.y)
+	//Choose the initial cell, mark it as visited and push it to the stack
+	std::stack<VisitedNode> recursionStack;
+	recursionStack.push(VisitedNode(
+		mazeMap->getMazeNode(startPos),
+		startPos
+		)
 	);
+	mazeFogMap[mazeMap->parsePosition(startPos)] = 1;
 
-	//start recurisve procedure with starting node and ending node
-	exploreNodeDFS(
-		&mazeFogMap,
-		mazeMap,
-		boundedStartPos
-	);
+	//While the stack is not empty
+	while (!recursionStack.empty()) {
+		//Pop a cell from the stack and make it a current cell
+		VisitedNode currentNode = recursionStack.top();
+		recursionStack.pop();
+		
+		//If the current cell has any neighbours which have not been visited
+		Neighbour neighbour = getRandomExplorableNeighbour(
+			mazeMap,
+			&mazeFogMap,
+			currentNode.position
+		);
+		if (!neighbour.node)
+			continue;
+		
+		//Push the current cell to the stack
+		recursionStack.push(currentNode);
+		
+		//Remove the wall between the current cell and the chosen cell
+		linkNodes(
+			mazeMap,
+			&currentNode.position,
+			&neighbour
+		);
+		
+		//Mark the chosen cell as visited and push it to the stack
+		mazeFogMap[mazeMap->parsePosition(neighbour.position)] = 1;
+		recursionStack.push(VisitedNode(
+			neighbour.node,
+			neighbour.position
+		));
+	}
 }
 
 // \brief Generates an empty map with a given size
-// \param mapSize Vector2 with map size passed by value
+// 
+// \param *mazeMap: Pointer to the maze map
+// \param mapSize: Vector2 with map size passed by value
 void MazeGenerator::generateMazeEmpty(MazeMap* mazeMap, const Vector2 mapSize) {
 	mazeMap->resize(mapSize);
 }
 
-// \brief Recursive function for generateMazeDFS function
-//
-// \param *mazeFogMap:	Reference to the fog map tracking the visited nodes
-// \param *mazeMap:	Reference to the maze map
-// \param currentNodePos: Position of the node currently beign explored 
-void MazeGenerator::exploreNodeDFS(std::vector<int>* mazeFogMap, MazeMap* mazeMap, BoundedVector2 currentNodePos) {
-	//set current node as visited
-	mazeFogMap->at(mazeMap->parsePosition(currentNodePos)) = 1;
-
-	//gets the available neighbours around the current node
-	std::vector<Neighbour> availableNeighbours = getAvailableNeighbours(
-		mazeMap,
-		mazeFogMap,
-		&currentNodePos
-	);
-
-	//if no valid neighbours, return
-	if (!availableNeighbours.size())
-		return;
-
-	//select a random neighbour node
-	//random neighbour selection is made trough vector shuffle and pop
-	std::shuffle(availableNeighbours.begin(), availableNeighbours.end(), g);
-
-	//while there are available neighbours
-	while (availableNeighbours.size() > 0) {
-
-		//cheks if neighbour has been visited
-		if (mazeFogMap->at(mazeMap->parsePosition(availableNeighbours.back().position))) {
-			//if neighbour has been already visited remove it from the available neighbours and skip loop cicle
-			availableNeighbours.pop_back();
-			continue;
-		}
-
-		//delete wall between current node and neighbour by creating link between them
-		linkNodes(
-			mazeMap,
-			&currentNodePos,
-			&availableNeighbours.back()
-		);
-
-		//sets neighbourBoundedPos to the neihbouring node position for the next recursive call
-		BoundedVector2 neighbourBoundedPos = currentNodePos;
-		neighbourBoundedPos.setVector2(availableNeighbours.back().position);
-
-		//pop the neighbour from the vector
-		availableNeighbours.pop_back();
-
-		//call recursive procedure on neighbour node
-		exploreNodeDFS(
-			mazeFogMap,
-			mazeMap,
-			neighbourBoundedPos
-		);
-	}
-}
-
 // \brief Link two MazeNodes by setting each other as neighbours
 //
-// \param *mazeMap:	reference to the maze map
-// \param *mazeNodePos:	reference to the position of the maze node to connect to the neighbour
-// \param *neighbour:	reference of the neighbour to connect to the maze node
-void MazeGenerator::linkNodes(MazeMap* mazeMap, BoundedVector2* mazeNodePos, Neighbour* neighbour) {
+// \param *mazeMap:	Pointer to the maze map
+// \param *mazeNodePos:	Pointer to the position of the maze node to connect to the neighbour
+// \param *neighbour: Pointer of the neighbour to connect to the maze node
+void MazeGenerator::linkNodes(MazeMap* mazeMap, Vector2* mazeNodePos, Neighbour* neighbour) {
 	MazeNode* currentNode = mazeMap->getMazeNode(*mazeNodePos);
 	MazeNode* neighbourNode = mazeMap->getMazeNode(neighbour->position);
 
-	currentNode->setNeighbour(neighbour->positionFromNode, neighbour->node);
-	neighbourNode->setNeighbour(MazeNode::getOppositeDirection(neighbour->positionFromNode), currentNode);
+	currentNode->setNeighbour(neighbour->directionFromNode, neighbour->node);
+	neighbourNode->setNeighbour(MazeNode::getOppositeDirection(neighbour->directionFromNode), currentNode);
 }
 
 // \brief Gets the available neighbours around a maze node
 //
-// \param *mazeMap: Reference to the maze map
-// \param *mazeFogMap: Reference to the fog map tracking the visited nodes
-// \param *currentNodePos: Position of the node currently beign explored 
-std::vector<MazeGenerator::Neighbour> MazeGenerator::getAvailableNeighbours(MazeMap* mazeMap, std::vector<int>* mazeFogMap, BoundedVector2* currentNodePos) {
+// \param *mazeMap: Pointer to the maze map
+// \param *mazeFogMap: Pointer to the fog map tracking the visited nodes
+// \param nodePosition: Position of the node currently beign explored 
+std::vector<MazeGenerator::Neighbour> MazeGenerator::getAvailableNeighbours(MazeMap* mazeMap, std::vector<int>* mazeFogMap, BoundedVector2 nodePosition) {
 	std::vector<Neighbour> availableNeighbours;
 	Vector2* neighbourPos;
 	
 	//gets the available neighbours around the current node
 	//check if there is a north neigbour and is not explored
-	if (neighbourPos = currentNodePos->moveTo(NORTH))
+	if (neighbourPos = nodePosition.moveTo(NORTH))
 		if (!mazeFogMap->at(mazeMap->parsePosition(*neighbourPos)))
 			availableNeighbours.push_back(Neighbour(mazeMap->getMazeNode(*neighbourPos), *neighbourPos, NORTH));
 
 	//check if there is a south neigbour and is not explored
-	if (neighbourPos = currentNodePos->moveTo(SOUTH))
+	if (neighbourPos = nodePosition.moveTo(SOUTH))
 		if (!mazeFogMap->at(mazeMap->parsePosition(*neighbourPos)))
 			availableNeighbours.push_back(Neighbour(mazeMap->getMazeNode(*neighbourPos), *neighbourPos, SOUTH));
 
 	//check if there is a east neigbour and is not explored
-	if (neighbourPos = currentNodePos->moveTo(EAST))
+	if (neighbourPos = nodePosition.moveTo(EAST))
 		if (!mazeFogMap->at(mazeMap->parsePosition(*neighbourPos)))
 			availableNeighbours.push_back(Neighbour(mazeMap->getMazeNode(*neighbourPos), *neighbourPos, EAST));
 
 	//check if there is a west neigbour and is not explored
-	if (neighbourPos = currentNodePos->moveTo(WEST))
+	if (neighbourPos = nodePosition.moveTo(WEST))
 		if (!mazeFogMap->at(mazeMap->parsePosition(*neighbourPos)))
 			availableNeighbours.push_back(Neighbour(mazeMap->getMazeNode(*neighbourPos), *neighbourPos, WEST));
 
 	return availableNeighbours;
+}
+
+// \brief Gets a random explorable neighbour to a node
+//
+// \param *mazeMap: Pointer to the maze map
+// \param *mazeFogMap: Pointer to the fog map tracking the visited nodes
+// \param nodePosition: Position of the node currently beign explored 
+//
+// \return Neighbour: Returns the random neighbour 
+MazeGenerator::Neighbour MazeGenerator::getRandomExplorableNeighbour(MazeMap* mazeMap, std::vector<int>* fogMap, const Vector2 nodePosition) {
+	BoundedVector2 boundedNodePosition = BoundedVector2(nodePosition.x, nodePosition.y);
+	boundedNodePosition.setBounds(
+		Vector2(0, mazeMap->getMapSize().x),
+		Vector2(0, mazeMap->getMapSize().y)
+	);
+	//retrieve all explorable neighbours
+	std::vector<Neighbour> availableNeighbours = getAvailableNeighbours(mazeMap, fogMap, boundedNodePosition);
+
+	//if there are no expolorable neighbours return an empty neighbour
+	if (!availableNeighbours.size())
+		return Neighbour();
+
+	//if there are more than one neighbour shuffle the vector for random selection
+	if (availableNeighbours.size() > 1)
+		std::shuffle(availableNeighbours.begin(), availableNeighbours.end(), g);
+
+	//return the last neighbour from the vector
+	return availableNeighbours.back();
 }
