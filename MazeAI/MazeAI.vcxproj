@@ -150,6 +150,8 @@
     <ClCompile Include="MazeMap.cpp" />
     <ClCompile Include="MazeNode.cpp" />
     <ClCompile Include="MazeRenderer.cpp" />
+    <ClCompile Include="IObserver.cpp" />
+    <ClCompile Include="IObservable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\ImGui-SFML\imconfig-SFML.h" />
@@ -163,6 +165,8 @@
     <ClInclude Include="MazeMap.h" />
     <ClInclude Include="MazeNode.h" />
     <ClInclude Include="MazeRenderer.h" />
+    <ClInclude Include="IObserver.h" />
+    <ClInclude Include="IObservable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

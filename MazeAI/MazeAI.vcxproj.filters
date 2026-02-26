@@ -87,6 +87,12 @@
     <ClCompile Include="GuiHandler.cpp">
       <Filter>Source Files\User Interface</Filter>
     </ClCompile>
+    <ClCompile Include="IObservable.cpp">
+      <Filter>Source Files\User Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="IObserver.cpp">
+      <Filter>Source Files\User Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\ImGui\imconfig.h">
@@ -121,6 +127,12 @@
     </ClInclude>
     <ClInclude Include="MazeRenderer.h">
       <Filter>Header Files\Maze Elements\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="IObservable.h">
+      <Filter>Header Files\User Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="IObserver.h">
+      <Filter>Header Files\User Interface</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

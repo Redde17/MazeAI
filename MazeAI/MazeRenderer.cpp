@@ -1,9 +1,12 @@
 #include "MazeRenderer.h"
 #include <iostream>
+#include "MazeHandler.h"
+
 // \brief MazeRenderer empty constructor
 MazeRenderer::MazeRenderer() {
 	mazeMap = nullptr;
 	mazeSprite = nullptr;
+	tileSize = 0;
 }
 
 // \brief MazeRenderer constructor
@@ -38,6 +41,17 @@ void MazeRenderer::resize(const float newSize) {
 	mazeSprite = new sf::Sprite(mazeTexture.getTexture());	//create new sprite from new mazeTexture
 }
 
+//TODO: comment
+void MazeRenderer::update() {
+	//recreate sprite
+	mazeMap = MazeHandler::GetInstance()->getMazeMap();
+
+	generateMazeTexture();
+
+	delete mazeSprite; //delete old mazeSprite
+	mazeSprite = new sf::Sprite(mazeTexture.getTexture()); //create new sprite from new mazeTexture
+}
+
 // \brief Generates a maze texture from the maze map
 void MazeRenderer::generateMazeTexture() {
 	sf::Vertex* tile;
@@ -50,10 +64,10 @@ void MazeRenderer::generateMazeTexture() {
 
 	bool swap = true;
 
-	size_t counter  = 0;
-	size_t vertexCounter = 0;
-	for (size_t x = 0; x < mapSize.x; x++) {
-		for (size_t y = 0; y < mapSize.y; y++) {
+	int counter  = 0;
+	int vertexCounter = 0;
+	for (int x = 0; x < mapSize.x; x++) {
+		for (int y = 0; y < mapSize.y; y++) {
 			//gets the pointer to the first vertex of a tile inside the vertexMap
 			tile = &vertexMap[(x * mapSize.y + y) * 6 * 5];
 
@@ -67,7 +81,7 @@ void MazeRenderer::generateMazeTexture() {
 			tile[++counter].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize);
 
 			//draw walls
-			mazeNode = mazeMap->GetMazeNode(Vector2(x, y));
+			mazeNode = mazeMap->getMazeNode(Vector2(x, y));
 			if (!mazeNode->getNeighbour(NORTH)) {
 				//draw north wall
 				tile[++counter].position = sf::Vector2f(x * tileSize, y * tileSize);

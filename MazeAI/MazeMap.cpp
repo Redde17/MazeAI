@@ -48,7 +48,7 @@ bool Vector2::operator==(const Vector2 other) {
 // 
 // \param xBounds	Bounds for the x axis
 // \param yBounds	Bounds for the y axis
-void BoundedVector2::SetBounds(Vector2 xBounds, Vector2 yBounds) {
+void BoundedVector2::setBounds(Vector2 xBounds, Vector2 yBounds) {
 	this->xBounds = xBounds;
 	this->yBounds = yBounds;
 }
@@ -125,22 +125,26 @@ void BoundedVector2::operator=(const BoundedVector2 other) {
 // \brief creates an empty Maze with all the walls
 // 
 // \param mapSize	Defines the width and height of the map
-MazeMap::MazeMap(const Vector2 mapSize) : mapSize_(mapSize) {
+MazeMap::MazeMap(const Vector2 mapSize) {
+	this->mapSize = mapSize;
+
 	// Creates a connectionless vector of nodes
-	for (size_t i = 0; i < mapSize_.x * mapSize_.y; i++)
-		map_.push_back(new MazeNode());
+	map.resize(mapSize.x * mapSize.y);
+}
+
+MazeMap::~MazeMap() {
 }
 
 // \brief Get the pointer to the vector storing the map
 // \return Pointer to the map vector
-std::vector<MazeNode*>* MazeMap::GetMap() {
-	return &map_;
+std::vector<MazeNode>* MazeMap::getMap() {
+	return &map;
 }
 
 // \brief Get the Vector2 containing the map size
 // \return Vector2 with map size
 Vector2 MazeMap::getMapSize() {
-	return mapSize_;
+	return mapSize;
 }
 
 // \brief Get a specific node on the map
@@ -153,9 +157,8 @@ Vector2 MazeMap::getMapSize() {
 // \param position	Position of the node to get
 // 
 // \return Pointer to a MazeNode in the map
-MazeNode* MazeMap::GetMazeNode(const Vector2* position) {
-	MazeNode* mazeNode = map_[parsePosition(position)];
-	return mazeNode;
+MazeNode* MazeMap::getMazeNode(const Vector2* position) {
+	return &map[parsePosition(position)];
 }
 
 // \brief Get a specific node on the map
@@ -167,8 +170,8 @@ MazeNode* MazeMap::GetMazeNode(const Vector2* position) {
 // \param position	Position of the node to get
 // 
 // \return Pointer to a MazeNode in the map
-MazeNode* MazeMap::GetMazeNode(const Vector2 position) {
-	return map_[parsePosition(position)];
+MazeNode* MazeMap::getMazeNode(const Vector2 position) {
+	return &map[parsePosition(position)];
 }
 
 // \brief Set a specific node on the map
@@ -176,8 +179,8 @@ MazeNode* MazeMap::GetMazeNode(const Vector2 position) {
 // \param position	position of the node to set
 // 
 // \param newMazeNode
-void MazeMap::SetMapNode(const Vector2 position, MazeNode* newMazeNode) {
-	map_[parsePosition(position)] = newMazeNode;
+void MazeMap::setMazeNode(const Vector2 position, MazeNode newMazeNode) {
+	map[parsePosition(position)] = newMazeNode;
 }
 
 // \brief Removes all the walls currently in the maze
@@ -187,45 +190,56 @@ void MazeMap::removeWalls() {
 
 	//Bounded vector2 for cheking bounds of the node while retrieving neighboars
 	BoundedVector2* boundedPos = new BoundedVector2(0, 0);
-	boundedPos->SetBounds(Vector2(0, mapSize_.x), Vector2(0, mapSize_.y));
+	boundedPos->setBounds(Vector2(0, mapSize.x), Vector2(0, mapSize.y));
 	Vector2* neighbourNodePosition;
 	MazeNode* neighbourNode;
 
 	//for each neighbour, retrieve it if possible and create connection with it
 	//otherwise set neighbour to nullptr
-	for (size_t x = 0; x < mapSize_.x; x++) {
-		for (size_t y = 0; y < mapSize_.y; y++) {
+	for (int x = 0; x < mapSize.x; x++) {
+		for (int y = 0; y < mapSize.y; y++) {
 			boundedPos->setVector2(x, y);
 
 			//Check north
 			if (neighbourNodePosition = boundedPos->moveTo(NORTH))
-				neighbourNode = map_[parsePosition(neighbourNodePosition)];
+				neighbourNode = &map[parsePosition(neighbourNodePosition)];
 			else
 				neighbourNode = nullptr;
 
-			map_[parsePosition(Vector2(x, y))]->setNeighbour(NORTH, neighbourNode);
+			map[parsePosition(Vector2(x, y))].setNeighbour(NORTH, neighbourNode);
 			//Check sud
 			if (neighbourNodePosition = boundedPos->moveTo(SOUTH))
-				neighbourNode = map_[parsePosition(neighbourNodePosition)];
+				neighbourNode = &map[parsePosition(neighbourNodePosition)];
 			else
 				neighbourNode = nullptr;
-			map_[parsePosition(Vector2(x, y))]->setNeighbour(SOUTH, neighbourNode);
+			map[parsePosition(Vector2(x, y))].setNeighbour(SOUTH, neighbourNode);
 
 			//Check east
 			if (neighbourNodePosition = boundedPos->moveTo(EAST))
-				neighbourNode = map_[parsePosition(neighbourNodePosition)];
+				neighbourNode = &map[parsePosition(neighbourNodePosition)];
 			else
 				neighbourNode = nullptr;
-			map_[parsePosition(Vector2(x, y))]->setNeighbour(EAST, neighbourNode);
+			map[parsePosition(Vector2(x, y))].setNeighbour(EAST, neighbourNode);
 
 			//Check west
 			if (neighbourNodePosition = boundedPos->moveTo(WEST))
-				neighbourNode = map_[parsePosition(neighbourNodePosition)];
+				neighbourNode = &map[parsePosition(neighbourNodePosition)];
 			else
 				neighbourNode = nullptr;
-			map_[parsePosition(Vector2(x, y))]->setNeighbour(WEST, neighbourNode);
+			map[parsePosition(Vector2(x, y))].setNeighbour(WEST, neighbourNode);
 		}
 	}
+}
+
+// \brief Resizes the current map and clears it
+// \param newSize: New size for the maze map
+void MazeMap::resize(const Vector2 newSize) {
+	//Update map size
+	mapSize = newSize;
+
+	//Clear map vector, and resize it
+	map.clear();
+	map.resize(mapSize.x * mapSize.y);
 }
 
 // \brief Parses (x, y) coordinates into single value for map vector
@@ -244,7 +258,7 @@ int MazeMap::parsePosition(const Vector2* position) {
 	if (!validPosition(*position))
 		return -1;
 
-	int parsedPos = position->x * mapSize_.y + position->y;
+	int parsedPos = position->x * mapSize.y + position->y;
 
 	//Position is deleted to avoid memory leaks when passing
 	//to the function new Vector2 position	
@@ -264,7 +278,7 @@ int MazeMap::parsePosition(const Vector2 position) {
 	if (!validPosition(position))
 		return -1;
 
-	return position.x * mapSize_.y + position.y;
+	return position.x * mapSize.y + position.y;
 }
 
 
@@ -273,10 +287,11 @@ int MazeMap::parsePosition(const Vector2 position) {
 bool MazeMap::validPosition(const Vector2 position) {
 	//if either of the coordinates is less then 0 or more the the max mapSize
 	//return false
-	if (position.x < 0 || position.x > mapSize_.x)
+	if (position.x < 0 || position.x > mapSize.x)
 		return false;
-	if (position.y < 0 || position.y > mapSize_.y)
+	if (position.y < 0 || position.y > mapSize.y)
 		return false;
+	return true;
 }
 
 ///DEBUG FUNCTIONS
@@ -292,10 +307,10 @@ std::vector<int> MazeMap::getNeighboursMap() {
 	int nodeNeighbours;
 	//For each node in the maze map, count the amount of neighbours
 	//the resulting amount is then inserted in the neighbours map
-	for (size_t x = 0; x < mapSize_.x; x++) {
-		for (size_t y = 0; y < mapSize_.y; y++) {
+	for (int x = 0; x < mapSize.x; x++) {
+		for (int y = 0; y < mapSize.y; y++) {
 			//gets the amount of neighbours of the nove (i, j)
-			nodeNeighbours = GetMazeNode(Vector2(x, y))->getNeighboursAmount();
+			nodeNeighbours = getMazeNode(Vector2(x, y))->getNeighboursAmount();
 			//insert the value into the neighbours map in position (i, j)
 			neighboursMap.push_back(nodeNeighbours);
 		}
@@ -313,19 +328,19 @@ std::vector<int> MazeMap::getNeighboursMap() {
 // \return std::vector of ints
 std::vector<int> MazeMap::getMazeMap() {
 	int mapOffset = 3;
-	std::vector<int> mazeMap(mapSize_.x * mapSize_.y * 9);
+	std::vector<int> mazeMap(mapSize.x * mapSize.y * 9);
 	MazeNode* mazeNode = nullptr;
 
-	int mapSizeY = mapSize_.y;
+	int mapSizeY = mapSize.y;
 	auto parseLocalMazeMapPosition = [mapSizeY](const Vector2 position) {
 		return position.x * (mapSizeY * 3) + position.y;
 	};
 
 	//for each node of the map, create a 3x3 matrix inside vector<int> mazeMap
 	//that rappresents the node paths and walls to the neighbours
-	for (size_t x = 0; x < mapSize_.x; x++) {
-		for (size_t y = 0; y < mapSize_.y; y++) {
-			mazeNode = map_[parsePosition(Vector2(x, y))];
+	for (int x = 0; x < mapSize.x; x++) {
+		for (int y = 0; y < mapSize.y; y++) {
+			mazeNode = &map[parsePosition(Vector2(x, y))];
 
 			//generate node array 
 			//first row

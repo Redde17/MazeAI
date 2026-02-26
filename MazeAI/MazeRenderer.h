@@ -1,10 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "MazeMap.h"
+#include "IObserver.h"
 
 // Rendere class to draw the maze on screen with SFML
-class MazeRenderer
-{
+class MazeRenderer : public IObserver {
 private:
 	MazeMap* mazeMap;
 	sf::RenderTexture mazeTexture;
@@ -31,6 +31,8 @@ public:
 	// \brief Set a new cell size value
 	// \param newSize value of the new size to apply to the cell
 	void resize(const float newSize);
+
+	virtual void update();
 
 private:
 	// \brief Generates a maze texture from the maze map

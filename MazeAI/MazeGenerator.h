@@ -24,6 +24,10 @@ public:
 	// \return bool: True if generation has been completed False otherwise
 	static void generateMazeDFS(MazeMap* mazeMap, const Vector2 startPos);
 
+	// \brief Generates an empty map with a given size
+	// \param mapSize Vector2 with map size passed by value
+	static void generateMazeEmpty(MazeMap* mazeMap, const Vector2 mapSize);
+
 private:
 	// \brief Recursive function for generateMazeDFS function
 	//

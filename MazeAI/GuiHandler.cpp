@@ -34,8 +34,8 @@ GuiHandler* GuiHandler::GetInstance() {
 // \brief Draws all the UI elements that do not require data connection
 // \param *sprite: Reference to the sprite to be drawn inside the RenderWindow
 void GuiHandler::drawAll(sf::Sprite* sprite) {
-    drawMazeSettings();
     drawRenderWindow(sprite);
+    drawMazeSettings();
     drawDebugWindow();
 }
 
@@ -104,6 +104,8 @@ void GuiHandler::onChangeMazeSizeButtonClick(const Vector2 newSize) {
     //Create a new maze with a new size
     
     //New maze gets generated but not redrawn 
-    //TODO: Implement observer pattern or find another solution to notify rendere about maze change
-    MH->generateEmptyMazeMap(newSize);
+
+    MH->generateMazeMap(MazeHandler::Empty, newSize);
+
+    MH->notify();
 }

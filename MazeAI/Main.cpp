@@ -13,13 +13,15 @@ int main() {
     MazeHandler* MH = MazeHandler::GetInstance();
     
     //generate a maze map
-    MH->generateEmptyMazeMap(Vector2(DEFAULT_SIZE_X, DEFAULT_SIZE_Y));
-    MH->generateMazeMap(MazeHandler::DepthFirstSearch);
+    MH->generateMazeMap(MazeHandler::DepthFirstSearch, Vector2(DEFAULT_SIZE_X, DEFAULT_SIZE_Y));
 
     //Get gui handler singleton reference
     GuiHandler* GH = GuiHandler::GetInstance();
 
     MazeRenderer mazeRenderer(MH->getMazeMap(), 40.f);
+
+    //Adds mazeRenderer as an observer for the mazeHandler in case of map changes for redrawing
+    MH->addObserver(mazeRenderer);
 
     //Define window with settings
     sf::ContextSettings settings;

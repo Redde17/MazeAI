@@ -6,7 +6,7 @@ std::mutex MazeHandler::mutex_;
 
 //MapHandler constructor
 MazeHandler::MazeHandler(){
-    mazeMap = nullptr;
+    mazeMap = new MazeMap(Vector2(0, 0));
 }
 
 //MapHandler distructor
@@ -33,28 +33,16 @@ MazeMap* MazeHandler::getMazeMap() {
     return mazeMap;
 }
 
-// \brief Generates an empty map with a given size
-// 
-// Vector2* mapSize will be deleted
-// 
-// \param mapSize Vector2 with map size passed by reference
-void MazeHandler::generateEmptyMazeMap(const Vector2* mapSize) {
-    mazeMap = new MazeMap(*mapSize);
-
-    delete mapSize;
-}
-
-// \brief Generates an empty map with a given size
-// \param mapSize Vector2 with map size passed by value
-void MazeHandler::generateEmptyMazeMap(const Vector2 mapSize) {
-    mazeMap = new MazeMap(mapSize);
-}
-
 // \brief Generates a maze trough a generating algorithm
 // \param mazeGenerator selector for the type of maze generation
-void MazeHandler::generateMazeMap(MazeGeneratorSelector mazeGenerator, Vector2 startPos) {
+void MazeHandler::generateMazeMap(MazeGeneratorSelector mazeGenerator, const Vector2 size, const Vector2 startPos) {
     switch (mazeGenerator){
+        case MazeHandler::Empty:
+            MazeGenerator::generateMazeEmpty(mazeMap, size);
+            break;
+
         case MazeHandler::DepthFirstSearch:
+            MazeGenerator::generateMazeEmpty(mazeMap, size);
             MazeGenerator::generateMazeDFS(mazeMap, startPos);
             break;
 

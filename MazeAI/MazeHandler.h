@@ -1,11 +1,13 @@
 #pragma once
 #include <mutex>
 #include "MazeMap.h"
+#include "IObservable.h"
 
 //Singleton for accessing the maze
-class MazeHandler {
+class MazeHandler : public Observable {
 public:
     enum MazeGeneratorSelector {
+        Empty,
         DepthFirstSearch
     };
 
@@ -32,19 +34,11 @@ public:
     // \return MazeMap* Pointer to the maze map instance
     MazeMap* getMazeMap();
 
-    // \brief Generates an empty map with a given size
-    // 
-    // Vector2* mapSize will be deleted
-    // 
-    // \param mapSize Vector2 with map size passed by reference
-    void generateEmptyMazeMap(const Vector2* mapSize);
-
-    // \brief Generates an empty map with a given size
-    // \param mapSize Vector2 with map size passed by value
-    void generateEmptyMazeMap(const Vector2 mapSize);
-
     // \brief Generates a maze trough a generating algorithm
-    // \param mazeGenerator selector for the type of maze generation
-    void generateMazeMap(MazeGeneratorSelector mazeGenerator, Vector2 startPos = Vector2(0, 0));
+    // 
+    // \param mazeGenerator: Selector for the type of maze generation
+    // \param size: Size of the map to generate
+    // \param startPos: Starting position for some generation algorithms, default value (0, 0)
+    void generateMazeMap(MazeGeneratorSelector mazeGenerator, const Vector2 size, const Vector2 startPos = Vector2(0, 0));
 };
 

@@ -23,7 +23,7 @@ void MazeGenerator::generateMazeDFS(MazeMap* mazeMap, const Vector2 startPos) {
 
 	//create bounded vector2 for bounded maze movement
 	BoundedVector2 boundedStartPos(startPos.x, startPos.y);
-	boundedStartPos.SetBounds(
+	boundedStartPos.setBounds(
 		Vector2(0, mapSize.x),
 		Vector2(0, mapSize.y)
 	);
@@ -34,7 +34,12 @@ void MazeGenerator::generateMazeDFS(MazeMap* mazeMap, const Vector2 startPos) {
 		mazeMap,
 		boundedStartPos
 	);
+}
 
+// \brief Generates an empty map with a given size
+// \param mapSize Vector2 with map size passed by value
+void MazeGenerator::generateMazeEmpty(MazeMap* mazeMap, const Vector2 mapSize) {
+	mazeMap->resize(mapSize);
 }
 
 // \brief Recursive function for generateMazeDFS function
@@ -100,8 +105,8 @@ void MazeGenerator::exploreNodeDFS(std::vector<int>* mazeFogMap, MazeMap* mazeMa
 // \param *mazeNodePos:	reference to the position of the maze node to connect to the neighbour
 // \param *neighbour:	reference of the neighbour to connect to the maze node
 void MazeGenerator::linkNodes(MazeMap* mazeMap, BoundedVector2* mazeNodePos, Neighbour* neighbour) {
-	MazeNode* currentNode = mazeMap->GetMazeNode(*mazeNodePos);
-	MazeNode* neighbourNode = mazeMap->GetMazeNode(neighbour->position);
+	MazeNode* currentNode = mazeMap->getMazeNode(*mazeNodePos);
+	MazeNode* neighbourNode = mazeMap->getMazeNode(neighbour->position);
 
 	currentNode->setNeighbour(neighbour->positionFromNode, neighbour->node);
 	neighbourNode->setNeighbour(MazeNode::getOppositeDirection(neighbour->positionFromNode), currentNode);
@@ -120,22 +125,22 @@ std::vector<MazeGenerator::Neighbour> MazeGenerator::getAvailableNeighbours(Maze
 	//check if there is a north neigbour and is not explored
 	if (neighbourPos = currentNodePos->moveTo(NORTH))
 		if (!mazeFogMap->at(mazeMap->parsePosition(*neighbourPos)))
-			availableNeighbours.push_back(Neighbour(mazeMap->GetMazeNode(*neighbourPos), *neighbourPos, NORTH));
+			availableNeighbours.push_back(Neighbour(mazeMap->getMazeNode(*neighbourPos), *neighbourPos, NORTH));
 
 	//check if there is a south neigbour and is not explored
 	if (neighbourPos = currentNodePos->moveTo(SOUTH))
 		if (!mazeFogMap->at(mazeMap->parsePosition(*neighbourPos)))
-			availableNeighbours.push_back(Neighbour(mazeMap->GetMazeNode(*neighbourPos), *neighbourPos, SOUTH));
+			availableNeighbours.push_back(Neighbour(mazeMap->getMazeNode(*neighbourPos), *neighbourPos, SOUTH));
 
 	//check if there is a east neigbour and is not explored
 	if (neighbourPos = currentNodePos->moveTo(EAST))
 		if (!mazeFogMap->at(mazeMap->parsePosition(*neighbourPos)))
-			availableNeighbours.push_back(Neighbour(mazeMap->GetMazeNode(*neighbourPos), *neighbourPos, EAST));
+			availableNeighbours.push_back(Neighbour(mazeMap->getMazeNode(*neighbourPos), *neighbourPos, EAST));
 
 	//check if there is a west neigbour and is not explored
 	if (neighbourPos = currentNodePos->moveTo(WEST))
 		if (!mazeFogMap->at(mazeMap->parsePosition(*neighbourPos)))
-			availableNeighbours.push_back(Neighbour(mazeMap->GetMazeNode(*neighbourPos), *neighbourPos, WEST));
+			availableNeighbours.push_back(Neighbour(mazeMap->getMazeNode(*neighbourPos), *neighbourPos, WEST));
 
 	return availableNeighbours;
 }
