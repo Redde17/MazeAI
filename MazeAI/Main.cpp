@@ -4,22 +4,28 @@
 #include "MazeMap.h"
 #include "MazeRenderer.h"
 #include "GuiHandler.h"
+#include "DataCollector.h"
 
 #define DEFAULT_SIZE_X 25
 #define DEFAULT_SIZE_Y 25
 
 int main() {
-    //Get instance of MazeHandler singleton
-    MazeHandler* MH = MazeHandler::GetInstance();
-    
-    //generate a maze map
+    //Get Datacollector singleton instance
+    DataCollector* DC = DataCollector::getInstance();
+
+    //Get MazeHandler singleton instance
+    MazeHandler* MH = MazeHandler::getInstance();
+
+    //Generate starting map and chrono generation time
     MH->generateMazeMap(MazeHandler::DepthFirstSearch, Vector2(DEFAULT_SIZE_X, DEFAULT_SIZE_Y));
 
-    //Get gui handler singleton reference
-    GuiHandler* GH = GuiHandler::GetInstance();
+    //Get GuiHandler singleton instance
+    GuiHandler* GH = GuiHandler::getInstance();
 
+    //Instanciate a mazeRenderer
     MazeRenderer mazeRenderer(MH->getMazeMap(), 40.f);
 
+    //Pass the mazeRenderer to the GuiHandler singleton
     GH->setMazeRenderer(&mazeRenderer);
 
     //Adds mazeRenderer as an observer for the mazeHandler in case of map changes for redrawing

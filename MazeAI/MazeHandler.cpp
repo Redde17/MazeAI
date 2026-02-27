@@ -1,5 +1,6 @@
 #include "MazeHandler.h"
 #include "MazeGenerator.h"
+#include "DataCollector.h"
 
 MazeHandler* MazeHandler::instance_{ nullptr };
 std::mutex MazeHandler::mutex_;
@@ -17,7 +18,7 @@ MazeHandler::~MazeHandler() {
 
 // \brief Access method for the Maze Handler singleton
 // \return MazeHandler* Pointer to the singleton instance
-MazeHandler* MazeHandler::GetInstance() {
+MazeHandler* MazeHandler::getInstance() {
     //lock for multithread safety
     std::lock_guard<std::mutex> lock(mutex_);
 
@@ -36,6 +37,9 @@ MazeMap* MazeHandler::getMazeMap() {
 // \brief Generates a maze trough a generating algorithm
 // \param mazeGenerator selector for the type of maze generation
 void MazeHandler::generateMazeMap(MazeGeneratorSelector mazeGenerator, const Vector2 size, const Vector2 startPos) {
+    DataCollector* DC = DataCollector::getInstance();
+    DC->chronoTime(DataCollector::START, DataCollector::MAZE_GENERATION); //Start timing generation
+
     switch (mazeGenerator){
         case MazeHandler::Empty:
             MazeGenerator::generateMazeEmpty(mazeMap, size);
@@ -49,4 +53,6 @@ void MazeHandler::generateMazeMap(MazeGeneratorSelector mazeGenerator, const Vec
         default:
             break;
     }
+
+    DC->chronoTime(DataCollector::STOP, DataCollector::MAZE_GENERATION); //Stop timing generation
 }

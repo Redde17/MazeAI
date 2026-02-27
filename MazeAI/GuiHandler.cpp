@@ -2,20 +2,16 @@
 #include <iostream>
 
 #include "GuiHandler.h"
-
-
+#include "DataCollector.h"
 
 GuiHandler* GuiHandler::instance_{ nullptr };
 std::mutex GuiHandler::mutex_;
 
 //GuiHandler constructor
 GuiHandler::GuiHandler() {
-    MH = MH->GetInstance();
+    MH = MazeHandler::getInstance();
     MR = nullptr;
-    //size = Vector2(
-    //    MH->getMazeMap()->getMapSize().x,
-    //    MH->getMazeMap()->getMapSize().y
-    //);
+    DC = DataCollector::getInstance();
 }
 
 //GuiHandler distructor
@@ -25,7 +21,7 @@ GuiHandler::~GuiHandler() {
 
 // \brief Access method for the Gui Handler singleton
 // \return GuiHandler* Pointer to the singleton instance
-GuiHandler* GuiHandler::GetInstance() {
+GuiHandler* GuiHandler::getInstance() {
     //lock for multithread safety
     std::lock_guard<std::mutex> lock(mutex_);
 
@@ -140,16 +136,29 @@ void GuiHandler::drawMazeSettings() {
 // \brief Draws the window with the maze render
 // \param *sprite: Reference to the sprite to be drawn inside the window
 void GuiHandler::drawRenderWindow(sf::Sprite* sprite) {
+    DC->chronoTime(DataCollector::START, DataCollector::DRAW_TIME);
+
     ImGui::Begin("Maze", NULL, ImGuiWindowFlags_HorizontalScrollbar);
     ImGui::Image(*sprite);
     ImGui::End();
+
+    DC->chronoTime(DataCollector::STOP, DataCollector::DRAW_TIME);
 }
 
 // \brief Draws the debg window
 void GuiHandler::drawDebugWindow() {
     ImGui::Begin("Debug Window");
     ImGui::Text("Current Maze Size:");
-    ImGui::Text("x:[%d] y:[%d]", MH->getMazeMap()->getMapSize().x, MH->getMazeMap()->getMapSize().y);
+    ImGui::Text("\tx:[%d] y:[%d]", MH->getMazeMap()->getMapSize().x, MH->getMazeMap()->getMapSize().y);
+
+    ImGui::Text("\nTimers: ");
+    ImGui::Text("\tMaze generation: [%d ms]", DC->getTime(DataCollector::MAZE_GENERATION).count());
+    ImGui::Text("\tPath finding: [%d ms]", DC->getTime(DataCollector::PATH_FINDING).count());
+    ImGui::Text("\tRendering: [%d ms]", DC->getTime(DataCollector::RENDERING_WALL_LAYER).count() + DC->getTime(DataCollector::RENDERING_PATH_LAYER).count());
+    ImGui::Text("\t\tWall layer: [%d ms]", DC->getTime(DataCollector::RENDERING_WALL_LAYER).count());
+    ImGui::Text("\t\tPath Layer: [%d ms]", DC->getTime(DataCollector::RENDERING_PATH_LAYER).count());
+    ImGui::Text("\tDraw Time: [%d ms]", DC->getTime(DataCollector::DRAW_TIME).count());
+
     ImGui::End();
 }
 

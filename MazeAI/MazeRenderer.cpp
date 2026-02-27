@@ -44,7 +44,7 @@ void MazeRenderer::resize(const float newSize) {
 //TODO: comment
 void MazeRenderer::update() {
 	//recreate sprite
-	mazeMap = MazeHandler::GetInstance()->getMazeMap();
+	mazeMap = MazeHandler::getInstance()->getMazeMap();
 
 	generateMazeTexture();
 

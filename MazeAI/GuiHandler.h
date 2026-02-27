@@ -4,6 +4,7 @@
 
 #include "MazeHandler.h"
 #include "MazeRenderer.h"
+#include "DataCollector.h"
 
 // Singleton for user interface class handler
 class GuiHandler {
@@ -19,6 +20,8 @@ private:
 
 	MazeHandler* MH;
 	MazeRenderer* MR;
+	DataCollector* DC;
+
 protected:
 	//GuiHandler constructor
 	GuiHandler();
@@ -31,7 +34,7 @@ public:
 
 	// \brief Access method for the Gui Handler singleton
 	// \return GuiHandler*: Pointer to the singleton instance
-	static GuiHandler* GetInstance();
+	static GuiHandler* getInstance();
 
 	// \brief Setter for the maze renderer
 	// \param mazeRenderer: Pointer to the maze renderer to set
@@ -50,7 +53,7 @@ public:
 
 	// \brief Draws the window with the maze render
 	// \param *sprite: Reference to the sprite to be drawn inside the window
-	static void drawRenderWindow(sf::Sprite* sprite);
+	void drawRenderWindow(sf::Sprite* sprite);
 
 	// \brief Draws the debg window
 	void drawDebugWindow();

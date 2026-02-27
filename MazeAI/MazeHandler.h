@@ -1,5 +1,6 @@
 #pragma once
 #include <mutex>
+
 #include "MazeMap.h"
 #include "IObservable.h"
 
@@ -28,7 +29,7 @@ public:
 
     // \brief Access method for the Maze Handler singleton
     // \return MazeHandler* Pointer to the singleton instance
-    static MazeHandler* GetInstance();
+    static MazeHandler* getInstance();
 
     // \brief Get the maze map handled by the MazeHandler
     // \return MazeMap* Pointer to the maze map instance

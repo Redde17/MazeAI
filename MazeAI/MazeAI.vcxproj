@@ -140,6 +140,7 @@
     <ClCompile Include="..\lib\ImGui\imgui_draw.cpp" />
     <ClCompile Include="..\lib\ImGui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="DataCollector.cpp" />
     <ClCompile Include="GuiHandler.cpp" />
     <ClCompile Include="Main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\redsm\source\repos\MazeAI\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -159,6 +160,7 @@
     <ClInclude Include="..\lib\ImGui-SFML\imgui-SFML_export.h" />
     <ClInclude Include="..\lib\ImGui\imconfig.h" />
     <ClInclude Include="..\lib\ImGui\imgui.h" />
+    <ClInclude Include="DataCollector.h" />
     <ClInclude Include="GuiHandler.h" />
     <ClInclude Include="MazeGenerator.h" />
     <ClInclude Include="MazeHandler.h" />
