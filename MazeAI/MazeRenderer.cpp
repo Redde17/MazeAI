@@ -19,9 +19,15 @@ MazeRenderer::MazeRenderer() {
 MazeRenderer::MazeRenderer(MazeMap* mazeMap, const float tileSize) {
 	this->mazeMap = mazeMap;
 	this->tileSize = tileSize;
+	textureSize = sf::Vector2u (
+		mazeMap->getMapSize().x * tileSize,
+		mazeMap->getMapSize().y * tileSize
+	);
 
-	generateMazeTexture();
-	mazeSprite = new sf::Sprite(mazeTexture.getTexture());
+	//Render all layers and merge them into mazeTexture
+	renderLayers();
+	//Update maze sprite
+	updateSprite();
 }
 
 // \brief Get the maze sprite for drawing
@@ -35,10 +41,15 @@ sf::Sprite* MazeRenderer::getMazeSprite() {
 void MazeRenderer::resize(const float newSize) {
 	tileSize = newSize;	//save new size
 
-	generateMazeTexture();	//generate new mazeTexture with new size
+	textureSize = sf::Vector2u(
+		mazeMap->getMapSize().x * tileSize,
+		mazeMap->getMapSize().y * tileSize
+	);
 
-	delete mazeSprite;	//delete old mazeSprite
-	mazeSprite = new sf::Sprite(mazeTexture.getTexture());	//create new sprite from new mazeTexture
+	//Render all layers and merge them into mazeTexture
+	renderLayers();
+	//Update maze sprite
+	updateSprite();
 }
 
 //TODO: comment
@@ -46,112 +57,111 @@ void MazeRenderer::update() {
 	//recreate sprite
 	mazeMap = MazeHandler::getInstance()->getMazeMap();
 
-	generateMazeTexture();
-
-	delete mazeSprite; //delete old mazeSprite
-	mazeSprite = new sf::Sprite(mazeTexture.getTexture()); //create new sprite from new mazeTexture
-}
-
-// \brief Generates a maze texture from the maze map
-void MazeRenderer::generateMazeTexture() {
-	sf::Vertex* tile;
-	float wallSize = tileSize / 12;
-	MazeNode* mazeNode;
-
-	sf::Vector2 mapSize(mazeMap->getMapSize().x, mazeMap->getMapSize().y);
-	sf::VertexArray vertexMap(sf::PrimitiveType::Triangles);	//vertex map containing all the map
-	vertexMap.resize(mapSize.x * mapSize.y * (6 * 5));	//vertex map size is map size * 6 * number of possible walls
-
-	bool swap = true;
-
-	int counter  = 0;
-	int vertexCounter = 0;
-	for (int x = 0; x < mapSize.x; x++) {
-		for (int y = 0; y < mapSize.y; y++) {
-			//gets the pointer to the first vertex of a tile inside the vertexMap
-			tile = &vertexMap[(x * mapSize.y + y) * 6 * 5];
-
-			//define tile vertices for a single tile with size tileSize * tileSize
-			tile[counter].position = sf::Vector2f(x * tileSize, y * tileSize);
-			tile[++counter].position = sf::Vector2f(x * tileSize, (y + 1) * tileSize);
-			tile[++counter].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize);
-
-			tile[++counter].position = sf::Vector2f(x * tileSize, y * tileSize);
-			tile[++counter].position = sf::Vector2f((x + 1) * tileSize, y * tileSize);
-			tile[++counter].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize);
-
-			//draw walls
-			mazeNode = mazeMap->getMazeNode(Vector2(x, y));
-			if (!mazeNode->getNeighbour(NORTH)) {
-				//draw north wall
-				tile[++counter].position = sf::Vector2f(x * tileSize, y * tileSize);
-				tile[++counter].position = sf::Vector2f(x * tileSize, y * tileSize + wallSize);
-				tile[++counter].position = sf::Vector2f((x + 1) * tileSize, y * tileSize + wallSize);
-
-				tile[++counter].position = sf::Vector2f(x * tileSize, y * tileSize);
-				tile[++counter].position = sf::Vector2f((x + 1) * tileSize, y * tileSize);
-				tile[++counter].position = sf::Vector2f((x + 1) * tileSize, y * tileSize + wallSize);
-
-				//set black color for walls
-				for (size_t i = counter - 5; i < counter + 1; i++)
-					tile[i].color = sf::Color::Black;
-			}
-			if (!mazeNode->getNeighbour(SOUTH)) {
-				//draw south wall
-				tile[++counter].position = sf::Vector2f(x * tileSize, (y + 1) * tileSize - wallSize);
-				tile[++counter].position = sf::Vector2f(x * tileSize, (y + 1) * tileSize);
-				tile[++counter].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize);
-
-				tile[++counter].position = sf::Vector2f(x * tileSize, (y + 1) * tileSize - wallSize);
-				tile[++counter].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize - wallSize);
-				tile[++counter].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize);
-
-				//set black color for walls
-				for (size_t i = counter - 5; i < counter + 1; i++)
-					tile[i].color = sf::Color::Black;
-			}
-			if (!mazeNode->getNeighbour(EAST)) {
-				//draw east wall
-				tile[++counter].position = sf::Vector2f((x + 1) * tileSize - wallSize, y * tileSize);
-				tile[++counter].position = sf::Vector2f((x + 1) * tileSize - wallSize, (y + 1) * tileSize);
-				tile[++counter].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize);
-
-				tile[++counter].position = sf::Vector2f((x + 1) * tileSize - wallSize, y * tileSize);
-				tile[++counter].position = sf::Vector2f((x + 1) * tileSize, y * tileSize);
-				tile[++counter].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize);
-
-				//set black color for walls
-				for (size_t i = counter - 5; i < counter + 1; i++)
-					tile[i].color = sf::Color::Black;
-			}
-			if (!mazeNode->getNeighbour(WEST)) {
-				//draw west wall
-				tile[++counter].position = sf::Vector2f(x * tileSize, y * tileSize);
-				tile[++counter].position = sf::Vector2f(x * tileSize, (y + 1) * tileSize);
-				tile[++counter].position = sf::Vector2f(x * tileSize + wallSize, (y + 1) * tileSize);
-
-				tile[++counter].position = sf::Vector2f(x * tileSize, y * tileSize);
-				tile[++counter].position = sf::Vector2f(x * tileSize + wallSize, y * tileSize);
-				tile[++counter].position = sf::Vector2f(x * tileSize + wallSize, (y + 1) * tileSize);
-
-				//set black color for walls
-				for (size_t i = counter - 5; i < counter + 1; i++)
-					tile[i].color = sf::Color::Black;
-			}
-			vertexCounter += counter + 1;
-			counter = 0;
-		}
-	}
-
-	//std::cout << "DEBUG: vertexCounter[" << vertexCounter << "]" << std::endl;
-	//std::cout << "DEBUG: Expected vortex count[" << mapSize.x * mapSize.y * (6 * 5) << "]" << std::endl;
-
-	//render vertexMap into a texture
-	sf::Vector2u mazeTextureSize(
+	textureSize = sf::Vector2u(
 		mazeMap->getMapSize().x * tileSize,
 		mazeMap->getMapSize().y * tileSize
 	);
 
-	mazeTexture.resize(mazeTextureSize);
-	mazeTexture.draw(vertexMap);
+	//Render all layers and merge them into mazeTexture
+	renderLayers();
+	//Update maze sprite
+	updateSprite();
+}
+
+// \brief Render the bacgkround layer
+void MazeRenderer::renderBackgroundLayer() {
+	//Resize background layer and color it white
+	backgroundTexture.resize(textureSize);
+	backgroundTexture.clear(backgroundColor);
+}
+
+// \brief Render the maze path layer
+void MazeRenderer::renderPathLayer() {
+
+}
+
+// \brief Render the maze walls layer
+void MazeRenderer::renderWallsLayer() {
+	sf::Vector2 mapSize(mazeMap->getMapSize().x, mazeMap->getMapSize().y);
+	float wallSize = tileSize / 12;
+	//Size of vertex array is: number of tiles * number of walls * number of vertices for wall
+	sf::VertexArray vertexMap(sf::PrimitiveType::Triangles, mapSize.x * mapSize.y * 4 * 6);
+
+	int vertexCounter = 0;
+	MazeNode* mazeNode = nullptr;
+	for (int x = 0; x < mapSize.x; x++) {
+		for (int y = 0; y < mapSize.y; y++) {
+			mazeNode = mazeMap->getMazeNode(Vector2(x, y));
+			if (!mazeNode->getNeighbour(NORTH)) {
+				//if there is no neighbour to the north, render wall
+				vertexMap[vertexCounter++].position = sf::Vector2f(x * tileSize, y * tileSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f(x * tileSize, y * tileSize + wallSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f((x + 1) * tileSize, y * tileSize + wallSize);
+
+				vertexMap[vertexCounter++].position = sf::Vector2f(x * tileSize, y * tileSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f((x + 1) * tileSize, y * tileSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f((x + 1) * tileSize, y * tileSize + wallSize);
+			}
+			if (!mazeNode->getNeighbour(SOUTH)) {
+				//if there is no neighbour to the south, render wall
+				vertexMap[vertexCounter++].position = sf::Vector2f(x * tileSize, (y + 1) * tileSize - wallSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f(x * tileSize, (y + 1) * tileSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize);
+
+				vertexMap[vertexCounter++].position = sf::Vector2f(x * tileSize, (y + 1) * tileSize - wallSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize - wallSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize);
+			}
+			if (!mazeNode->getNeighbour(EAST)) {
+				//if there is no neighbour to the east, render wall
+				vertexMap[vertexCounter++].position = sf::Vector2f((x + 1) * tileSize - wallSize, y * tileSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f((x + 1) * tileSize - wallSize, (y + 1) * tileSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize);
+
+				vertexMap[vertexCounter++].position = sf::Vector2f((x + 1) * tileSize - wallSize, y * tileSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f((x + 1) * tileSize, y * tileSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize);
+			}
+			if (!mazeNode->getNeighbour(WEST)) {
+				//if there is no neighbour to the west, render wall
+				vertexMap[vertexCounter++].position = sf::Vector2f(x * tileSize, y * tileSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f(x * tileSize, (y + 1) * tileSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f(x * tileSize + wallSize, (y + 1) * tileSize);
+
+				vertexMap[vertexCounter++].position = sf::Vector2f(x * tileSize, y * tileSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f(x * tileSize + wallSize, y * tileSize);
+				vertexMap[vertexCounter++].position = sf::Vector2f(x * tileSize + wallSize, (y + 1) * tileSize);
+			}
+		}
+	}
+
+	vertexMap.resize(vertexCounter);
+	for(int i = 0; i < vertexCounter; i++)
+		vertexMap[i].color = wallColor;
+
+	//render vertexMap into a texture
+	wallsTexture.clear(sf::Color::Transparent);
+	wallsTexture.resize(textureSize);
+	wallsTexture.draw(vertexMap);
+}
+
+// \brief Render all the maze layers and the maze texture
+void MazeRenderer::renderLayers() {
+	//Render all the layers
+	renderBackgroundLayer();
+	//renderPathLayer();
+	renderWallsLayer();
+
+	//Resize and draw all layers onto mazeTexture
+	mazeTexture.resize(textureSize);
+	mazeTexture.draw(sf::Sprite(backgroundTexture.getTexture()));
+	//mazeTexture.draw(sf::Sprite(pathTexture.getTexture()));
+	mazeTexture.draw(sf::Sprite(wallsTexture.getTexture()));
+}
+
+// \brief Updates the sprite, if needed deletes old sprite
+void MazeRenderer::updateSprite() {
+	if(mazeSprite)
+		delete mazeSprite;	//delete old mazeSprite
+	mazeSprite = new sf::Sprite(mazeTexture.getTexture());
 }

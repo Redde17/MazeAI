@@ -6,11 +6,19 @@
 // Rendere class to draw the maze on screen with SFML
 class MazeRenderer : public IObserver {
 private:
+	sf::Color backgroundColor = sf::Color::White;
+	sf::Color pathColor = sf::Color::Green;
+	sf::Color wallColor = sf::Color::Black;
+
 	MazeMap* mazeMap;
+	float tileSize;
+	sf::Vector2u textureSize;
+
+	sf::RenderTexture backgroundTexture;
+	sf::RenderTexture pathTexture;
+	sf::RenderTexture wallsTexture;
 	sf::RenderTexture mazeTexture;
 	sf::Sprite* mazeSprite;
-	float tileSize;
-
 public:
 	// \brief MazeRenderer empty constructor
 	MazeRenderer();
@@ -24,7 +32,7 @@ public:
 	// \param tileSize	Size of each tile on the map, default value is 10.f
 	MazeRenderer(MazeMap* mazeMap, const float tileSize = 10.f);
 
-	// \brief Get the maze sprite for drawing
+	// \brief Get the maze sprite for drawinga
 	// \return Pointer to a Sprite of the maze map
 	sf::Sprite* getMazeSprite();
 
@@ -33,9 +41,20 @@ public:
 	void resize(const float newSize);
 
 	virtual void update();
-
 private:
-	// \brief Generates a maze texture from the maze map
-	void generateMazeTexture();
+	// \brief Render the bacgkround layer
+	void renderBackgroundLayer();
+
+	// \brief Render the maze path layer
+	void renderPathLayer();
+
+	// \brief Render the maze walls layer
+	void renderWallsLayer();
+
+	// \brief Render all the maze layers and the maze texture
+	void renderLayers();
+
+	// \brief Updates the sprite, if needed deletes old sprite
+	void updateSprite();
 };
 
