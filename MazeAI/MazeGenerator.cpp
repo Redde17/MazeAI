@@ -1,8 +1,9 @@
-#include "MazeGenerator.h"
 #include <time.h>
 #include <algorithm>
 #include <random>
 #include <stack>
+
+#include "MazeGenerator.h"
 
 //pseudo-random number generator
 std::random_device rd;
@@ -64,7 +65,7 @@ void MazeGenerator::generateMazeDFS(MazeMap* mazeMap, const Vector2 startPos) {
 	while (!recursionStack.empty()) {
 		//Pop a cell from the stack and make it a current cell
 		VisitedNode currentNode = recursionStack.top();
-		recursionStack.pop();
+		
 		
 		//If the current cell has any neighbours which have not been visited
 		Neighbour neighbour = getRandomExplorableNeighbour(
@@ -72,11 +73,13 @@ void MazeGenerator::generateMazeDFS(MazeMap* mazeMap, const Vector2 startPos) {
 			&mazeFogMap,
 			currentNode.position
 		);
-		if (!neighbour.node)
+		if (!neighbour.node) {
+			recursionStack.pop();
 			continue;
+		}
 		
 		//Push the current cell to the stack
-		recursionStack.push(currentNode);
+		//recursionStack.push(currentNode);
 		
 		//Remove the wall between the current cell and the chosen cell
 		linkNodes(

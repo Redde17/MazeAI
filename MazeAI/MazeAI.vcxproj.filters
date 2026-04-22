@@ -49,6 +49,18 @@
     <Filter Include="Header Files\Maze Elements\Rendering">
       <UniqueIdentifier>{d8066c42-6796-4206-80e6-9353b9addf94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Utility">
+      <UniqueIdentifier>{ba129909-4138-4a00-a7a8-d171b83d56e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility">
+      <UniqueIdentifier>{99c8dc3a-77c3-4f9c-9479-8c4f5849ed38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Maze Elements\PathFinding">
+      <UniqueIdentifier>{c2b982c3-3e22-4de8-8e5b-603a832d830b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Maze Elements\PathFinding">
+      <UniqueIdentifier>{f74aa3eb-b2a0-4a60-af3b-a07bf4e8fe8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -93,8 +105,20 @@
     <ClCompile Include="IObserver.cpp">
       <Filter>Source Files\User Interface</Filter>
     </ClCompile>
+    <ClCompile Include="Vector2.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundedVector2.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
     <ClCompile Include="DataCollector.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="MazePath.cpp">
+      <Filter>Source Files\Maze Elements\PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinder.cpp">
+      <Filter>Source Files\Maze Elements\PathFinding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -137,8 +161,28 @@
     <ClInclude Include="IObserver.h">
       <Filter>Header Files\User Interface</Filter>
     </ClInclude>
-    <ClInclude Include="DataCollector.h">
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundedVector2.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MazePath.h">
+      <Filter>Header Files\Maze Elements\PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinder.h">
+      <Filter>Header Files\Maze Elements\PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="DataCollector.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MazeAI.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

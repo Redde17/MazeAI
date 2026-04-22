@@ -105,13 +105,13 @@ void GuiHandler::drawMazeSettings() {
     if (ImGui::Button("Generate Maze")) {
         switch (generationSelection) {
             case 0:
-                onGenerateMazeButtonClick(size, MazeHandler::Empty);
+                onGenerateMazeButtonClick(size, MazeHandler::EMPTY);
                 break;
             case 1:
-                onGenerateMazeButtonClick(size, MazeHandler::DepthFirstSearch);
+                onGenerateMazeButtonClick(size, MazeHandler::DEPTH_FIRST_SEARCH);
                 break;
             default:
-                onGenerateMazeButtonClick(size, MazeHandler::Empty);
+                onGenerateMazeButtonClick(size, MazeHandler::EMPTY);
                 break;
         }
     }

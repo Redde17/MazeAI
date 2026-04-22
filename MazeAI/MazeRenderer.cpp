@@ -1,6 +1,7 @@
 #include "MazeRenderer.h"
 #include <iostream>
 #include "MazeHandler.h"
+#include "DataCollector.h"
 
 // \brief MazeRenderer empty constructor
 MazeRenderer::MazeRenderer() {
@@ -148,9 +149,20 @@ void MazeRenderer::renderWallsLayer() {
 // \brief Render all the maze layers and the maze texture
 void MazeRenderer::renderLayers() {
 	//Render all the layers
+	DataCollector* DC = DataCollector::getInstance();
+
+	//Render bacgkround layer
 	renderBackgroundLayer();
+
+	//Render path layer
+	DC->chronoTime(DataCollector::START, DataCollector::RENDERING_PATH_LAYER); //Start timing generation
 	//renderPathLayer();
+	DC->chronoTime(DataCollector::STOP, DataCollector::RENDERING_PATH_LAYER); //Start timing generation
+
+	//Render wall layer
+	DC->chronoTime(DataCollector::START, DataCollector::RENDERING_WALL_LAYER); //Start timing generation
 	renderWallsLayer();
+	DC->chronoTime(DataCollector::STOP, DataCollector::RENDERING_WALL_LAYER); //Start timing generation
 
 	//Resize and draw all layers onto mazeTexture
 	mazeTexture.resize(textureSize);

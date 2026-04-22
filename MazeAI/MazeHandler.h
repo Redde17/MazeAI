@@ -8,8 +8,8 @@
 class MazeHandler : public Observable {
 public:
     enum MazeGeneratorSelector {
-        Empty,
-        DepthFirstSearch
+        EMPTY,
+        DEPTH_FIRST_SEARCH
     };
 
 private:

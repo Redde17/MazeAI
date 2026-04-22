@@ -2,74 +2,15 @@
 #include <vector>
 
 #include "MazeNode.h"
-
-//Struct for bidimensional vector rappresentation
-struct Vector2 {
-	int x;
-	int y;
-
-	Vector2() {
-		x = y = 0;
-	}
-
-	Vector2(const int x, const int y) {
-		this->x = x;
-		this->y = y;
-	}
-
-	//Setters
-	void setX(const int x);
-	void setY(const int y);
-	void setVector2(const int x, const int y);
-	void setVector2(Vector2 pos);
-
-	// \brief Overload of operator =
-	void operator=(const Vector2 other);
-	// \brief Overload of operator !=
-	bool operator!=(const Vector2 other);
-	// \brief Overload of operator ==
-	bool operator==(const Vector2 other);
-};
-
-//Struct extending vector2 by adding upper and lower bounds to the axis
-struct BoundedVector2 : Vector2 {
-	Vector2 xBounds;
-	Vector2 yBounds;
-
-	using Vector2::Vector2;
-
-	// \brief Sets the bounds for the vector
-	// 
-	// The bounds are limits to where the vector can move
-	// Lower bound is x and upper bound is y
-	// 
-	// \param xBounds: Bounds for the x axis
-	// \param yBounds: Bounds for the y axis
-	void setBounds(Vector2 xBounds, Vector2 yBounds);
-
-	// \brief Creates a new vector moved to a specified direction
-	// 
-	// \param direction: Value that indicates the direction of movement for the vector
-	// 
-	// \return New moved vector
-	Vector2* moveTo(Direction direction);
-
-	// \brief Checks if the vector can move to the specified direction
-	// 
-	// \param direction: Value that indicates the direction of movement for the vector
-	// 
-	// \return bool Result of the check
-	bool canMoveTo(Direction direction);
-
-	// \brief Overload of operator =
-	void operator=(const BoundedVector2 other);
-};
+#include "MazePath.h"
+#include "Vector2.h"
 
 // Maze map class for map manipulation and access 
 class MazeMap {
 private:
 	Vector2 mapSize;			//Vector2 containing the map size
 	std::vector<MazeNode> map;	//Map of the maze
+	MazePath* mazePath;			//Map containing information about the pathing of the maze
 
 public:
 	// \brief creates an empty Maze
@@ -86,6 +27,10 @@ public:
 	// \brief Get the Vector2 containing the map size
 	// \return Vector2 with map size
 	Vector2 getMapSize();
+
+	// \brief Get a pointer to the MazePath isntance
+	// \return pointer to MazePath with pathing data
+	MazePath* getMazePath();
 
 	// \brief Get a specific node on the map
 	// 
@@ -170,4 +115,3 @@ public:
 	// \return std::vector of ints
 	std::vector<int> getMazeMap();
 };
-

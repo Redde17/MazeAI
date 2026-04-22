@@ -29,26 +29,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -140,6 +140,7 @@
     <ClCompile Include="..\lib\ImGui\imgui_draw.cpp" />
     <ClCompile Include="..\lib\ImGui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="BoundedVector2.cpp" />
     <ClCompile Include="DataCollector.cpp" />
     <ClCompile Include="GuiHandler.cpp" />
     <ClCompile Include="Main.cpp">
@@ -150,9 +151,12 @@
     <ClCompile Include="MazeHandler.cpp" />
     <ClCompile Include="MazeMap.cpp" />
     <ClCompile Include="MazeNode.cpp" />
+    <ClCompile Include="MazePath.cpp" />
     <ClCompile Include="MazeRenderer.cpp" />
     <ClCompile Include="IObserver.cpp" />
     <ClCompile Include="IObservable.cpp" />
+    <ClCompile Include="PathFinder.cpp" />
+    <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\ImGui-SFML\imconfig-SFML.h" />
@@ -160,15 +164,23 @@
     <ClInclude Include="..\lib\ImGui-SFML\imgui-SFML_export.h" />
     <ClInclude Include="..\lib\ImGui\imconfig.h" />
     <ClInclude Include="..\lib\ImGui\imgui.h" />
+    <ClInclude Include="BoundedVector2.h" />
     <ClInclude Include="DataCollector.h" />
     <ClInclude Include="GuiHandler.h" />
     <ClInclude Include="MazeGenerator.h" />
     <ClInclude Include="MazeHandler.h" />
     <ClInclude Include="MazeMap.h" />
     <ClInclude Include="MazeNode.h" />
+    <ClInclude Include="MazePath.h" />
     <ClInclude Include="MazeRenderer.h" />
     <ClInclude Include="IObserver.h" />
     <ClInclude Include="IObservable.h" />
+    <ClInclude Include="PathFinder.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Vector2.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MazeAI.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,5 +1,7 @@
 #pragma once
 #include "MazeMap.h"
+#include "BoundedVector2.h"
+
 
 //Generation class containing all maze generation functions 
 class MazeGenerator {

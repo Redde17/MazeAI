@@ -41,11 +41,11 @@ void MazeHandler::generateMazeMap(MazeGeneratorSelector mazeGenerator, const Vec
     DC->chronoTime(DataCollector::START, DataCollector::MAZE_GENERATION); //Start timing generation
 
     switch (mazeGenerator){
-        case MazeHandler::Empty:
+        case MazeHandler::EMPTY:
             MazeGenerator::generateMazeEmpty(mazeMap, size);
             break;
 
-        case MazeHandler::DepthFirstSearch:
+        case MazeHandler::DEPTH_FIRST_SEARCH:
             MazeGenerator::generateMazeEmpty(mazeMap, size);
             MazeGenerator::generateMazeDFS(mazeMap, startPos);
             break;
