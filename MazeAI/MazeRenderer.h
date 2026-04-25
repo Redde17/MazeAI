@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+
 #include "MazeMap.h"
 #include "IObserver.h"
 
@@ -7,8 +8,11 @@
 class MazeRenderer : public IObserver {
 private:
 	sf::Color backgroundColor = sf::Color::White;
-	sf::Color pathColor = sf::Color::Green;
+	sf::Color pathTileColor = sf::Color::Green;
+	sf::Color visitedTileColor = sf::Color::Cyan;
+	sf::Color defaultTileColor = sf::Color::White;
 	sf::Color wallColor = sf::Color::Black;
+
 
 	MazeMap* mazeMap;
 	float tileSize;

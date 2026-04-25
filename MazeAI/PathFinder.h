@@ -1,6 +1,5 @@
 #pragma once
 #include "MazePath.h"
-#include <map>
 
 class PathFinder {
 private:
@@ -24,6 +23,7 @@ private:
 
 public:
 	enum PathFinderAlgorithm {
+		NONE,
 		DEPTH_FIRST_SEARCH
 	};
 

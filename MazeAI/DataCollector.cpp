@@ -1,5 +1,4 @@
 #include "DataCollector.h"
-#include <iostream>
 
 DataCollector* DataCollector::instance_{ nullptr };
 std::mutex DataCollector::mutex_;

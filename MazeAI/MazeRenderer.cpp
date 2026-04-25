@@ -1,5 +1,4 @@
 #include "MazeRenderer.h"
-#include <iostream>
 #include "MazeHandler.h"
 #include "DataCollector.h"
 
@@ -78,7 +77,56 @@ void MazeRenderer::renderBackgroundLayer() {
 
 // \brief Render the maze path layer
 void MazeRenderer::renderPathLayer() {
+	sf::Vector2 mapSize(mazeMap->getMapSize().x, mazeMap->getMapSize().y);
+	//Size of vertex array is: maximum number of tiles possible * vertices per tile
+	sf::VertexArray vertexMap(sf::PrimitiveType::Triangles, mapSize.x * mapSize.y * 6);
 
+	MazePath* mazePath = mazeMap->getMazePath();
+	if (mazePath->getPathMapValue(Vector2(0, 0)) == MazePath::NOT_VISITED) {
+		//MazePath empty, no need to render verteces for empty MazePath
+		backgroundTexture.resize(textureSize);
+		pathTexture.clear(sf::Color::Transparent);
+		return;
+	}
+
+	int vertexCounter = -1;
+	sf::Color tileColor = defaultTileColor;
+	for (int x = 0; x < mapSize.x; x++) {
+		for (int y = 0; y < mapSize.y; y++) {
+			switch (mazePath->getPathMapValue(Vector2(x, y))) {
+				case MazePath::PATH:
+					tileColor = pathTileColor;
+					break;
+				case MazePath::VISITED:
+					tileColor = visitedTileColor;
+					break;
+				case MazePath::NOT_VISITED:
+					tileColor = defaultTileColor;
+					break;
+				default:
+					continue;
+			}
+
+			vertexMap[++vertexCounter].position = sf::Vector2f(x * tileSize, y * tileSize);
+			vertexMap[vertexCounter].color = tileColor;
+			vertexMap[++vertexCounter].position = sf::Vector2f((x + 1) * tileSize, y * tileSize);
+			vertexMap[vertexCounter].color = tileColor;
+			vertexMap[++vertexCounter].position = sf::Vector2f(x * tileSize, (y + 1) * tileSize);
+			vertexMap[vertexCounter].color = tileColor;
+
+			vertexMap[++vertexCounter].position = sf::Vector2f(x * tileSize, (y + 1) * tileSize);
+			vertexMap[vertexCounter].color = tileColor;
+			vertexMap[++vertexCounter].position = sf::Vector2f((x + 1) * tileSize, y * tileSize);
+			vertexMap[vertexCounter].color = tileColor;
+			vertexMap[++vertexCounter].position = sf::Vector2f((x + 1) * tileSize, (y + 1) * tileSize);
+			vertexMap[vertexCounter].color = tileColor;
+		}
+	}
+
+	//vertexMap.resize(vertexCounter);
+	pathTexture.clear(sf::Color::Transparent);
+	pathTexture.resize(textureSize);
+	pathTexture.draw(vertexMap);
 }
 
 // \brief Render the maze walls layer
@@ -156,7 +204,7 @@ void MazeRenderer::renderLayers() {
 
 	//Render path layer
 	DC->chronoTime(DataCollector::START, DataCollector::RENDERING_PATH_LAYER); //Start timing generation
-	//renderPathLayer();
+	renderPathLayer();
 	DC->chronoTime(DataCollector::STOP, DataCollector::RENDERING_PATH_LAYER); //Start timing generation
 
 	//Render wall layer
@@ -167,7 +215,7 @@ void MazeRenderer::renderLayers() {
 	//Resize and draw all layers onto mazeTexture
 	mazeTexture.resize(textureSize);
 	mazeTexture.draw(sf::Sprite(backgroundTexture.getTexture()));
-	//mazeTexture.draw(sf::Sprite(pathTexture.getTexture()));
+	mazeTexture.draw(sf::Sprite(pathTexture.getTexture()));
 	mazeTexture.draw(sf::Sprite(wallsTexture.getTexture()));
 }
 

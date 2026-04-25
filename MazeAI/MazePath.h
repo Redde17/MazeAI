@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+
 #include "Vector2.h"
 
 //Class for maze solution path rappresentation and handling

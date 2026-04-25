@@ -46,3 +46,13 @@ bool Vector2::operator==(const Vector2 other) {
 bool Vector2::operator<(const Vector2 other) const noexcept {
 	return ((this->x + this->y) < (other.x + other.y));
 }
+
+// \brief Overload of operator +
+Vector2 Vector2::operator+(const Vector2 other) {
+	return Vector2(x + other.x, y + other.y);
+}
+
+// \brief Overload of operator -
+Vector2 Vector2::operator-(const Vector2 other) {
+	return Vector2(x - other.x, y - other.y);
+}

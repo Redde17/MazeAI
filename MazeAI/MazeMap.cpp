@@ -120,6 +120,12 @@ void MazeMap::removeWalls() {
 	}
 }
 
+// \brief Clears the current MazePath
+void MazeMap::clearMazePath() {
+	delete mazePath;
+	mazePath = new MazePath(mapSize);
+}
+
 // \brief Resizes the current map and clears it
 // \param newSize: New size for the maze map
 void MazeMap::resize(const Vector2 newSize) {

@@ -3,8 +3,9 @@
 #include <imgui-SFML.h>
 
 #include "MazeHandler.h"
-#include "MazeRenderer.h"
 #include "DataCollector.h"
+#include "MazeRenderer.h"
+#include "PathFinder.h"
 
 // Singleton for user interface class handler
 class GuiHandler {
@@ -12,9 +13,15 @@ private:
 	static GuiHandler* instance_;	//GuiHandler singleton instance
 	static std::mutex mutex_;		//Multi threading safe mechanism
 
-	//Items for drop down menu selector
+	//Items for maze generation algorithm drop down menu selector
 	const char* generationSelectorItems[2] = {
 		"Empty",
+		"Depth First Search"
+	};
+
+	//Items for path finding algorithm drop down menu selector
+	const char* searchSelectorItems[2] = {
+		"None",
 		"Depth First Search"
 	};
 
@@ -51,6 +58,9 @@ public:
 	// \brief Draws the window with all the maze settings
 	void drawMazeSettings();
 
+	// \brief Draws the window with all the path generation settings
+	void drawPathSettings();
+
 	// \brief Draws the window with the maze render
 	// \param *sprite: Reference to the sprite to be drawn inside the window
 	void drawRenderWindow(sf::Sprite* sprite);
@@ -66,5 +76,11 @@ private:
 	// \param newSize: Size to use for the new maze
 	// \param mazeGenereatorSelector: Generation type for the new maze
 	void onGenerateMazeButtonClick(const Vector2 newSize, MazeHandler::MazeGeneratorSelector mazeGenereatorSelector);
-};
 
+	// \brief Event on the click of Find Path button
+	// 
+	// On find path button click, find a path to the current maze
+	// 
+	// \param mazeGenereatorSelector: Path finder algorithm for the search
+	void onPathFindingButtonClick(const PathFinder::PathFinderAlgorithm pathFinderAlgorithm);
+};

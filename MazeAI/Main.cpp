@@ -35,7 +35,7 @@ int main() {
 
     ///DEBUG
     //MazePath mazePath(Vector2(DEFAULT_SIZE_X, DEFAULT_SIZE_Y));
-    PathFinder::findPath(
+    /*PathFinder::findPath(
         PathFinder::DEPTH_FIRST_SEARCH,
         Vector2(0, 0),
         Vector2(DEFAULT_SIZE_X - 1, DEFAULT_SIZE_Y - 1),
@@ -48,7 +48,7 @@ int main() {
             std::cout << " " << MH->getMazeMap()->getMazePath()->getPathMapValue(Vector2(x, y));
         }
         std::cout << std::endl;
-    }
+    }*/
     ///DEBUG END
 
     //Define window with settings

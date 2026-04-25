@@ -1,8 +1,6 @@
-
+#include "GuiHandler.h"
 #include <iostream>
 
-#include "GuiHandler.h"
-#include "DataCollector.h"
 
 GuiHandler* GuiHandler::instance_{ nullptr };
 std::mutex GuiHandler::mutex_;
@@ -48,6 +46,7 @@ MazeRenderer* GuiHandler::getMazeRenderer() {
 void GuiHandler::drawAll(sf::Sprite* sprite) {
     drawRenderWindow(sprite);
     drawMazeSettings();
+    drawPathSettings();
     drawDebugWindow();
 }
 
@@ -85,7 +84,7 @@ void GuiHandler::drawMazeSettings() {
     ImGui::Text("\nMaze generation method:");
 
     //Drop down menu with generationSelectorItems[] for items
-    if (ImGui::BeginCombo("##combo", current_item)) // The second parameter is the label previewed before opening the combo.
+    if (ImGui::BeginCombo("##generation_combo", current_item)) // The second parameter is the label previewed before opening the combo.
     {
         for (int n = 0; n < IM_ARRAYSIZE(generationSelectorItems); n++) {
             bool is_selected = (current_item == generationSelectorItems[n]);
@@ -104,10 +103,10 @@ void GuiHandler::drawMazeSettings() {
     ImGui::Text("\n");
     if (ImGui::Button("Generate Maze")) {
         switch (generationSelection) {
-            case 0:
+            case 0: //Option: Empty
                 onGenerateMazeButtonClick(size, MazeHandler::EMPTY);
                 break;
-            case 1:
+            case 1: //Option: Depth First Search
                 onGenerateMazeButtonClick(size, MazeHandler::DEPTH_FIRST_SEARCH);
                 break;
             default:
@@ -130,6 +129,50 @@ void GuiHandler::drawMazeSettings() {
         oldRenderSize = renderSize;
     }
 
+    ImGui::End();
+}
+
+// \brief Draws the window with all the path generation settings
+void GuiHandler::drawPathSettings() {
+    ImGui::Begin("Path Settings");
+    //Generation algorithm selector variables
+    static const char* current_item = searchSelectorItems[0];
+    static int pathFinderSelection = 0;
+
+    ///Generation algorithm selector
+    ImGui::Text("\nPath search algorithm:");
+
+    //Drop down menu with generationSelectorItems[] for items
+    if (ImGui::BeginCombo("##search_combo", current_item)) // The second parameter is the label previewed before opening the combo.
+    {
+        for (int n = 0; n < IM_ARRAYSIZE(searchSelectorItems); n++) {
+            bool is_selected = (current_item == searchSelectorItems[n]);
+            if (ImGui::Selectable(searchSelectorItems[n], is_selected)) {
+                current_item = searchSelectorItems[n];
+                pathFinderSelection = n;
+            }
+
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
+    //Search path button
+    ImGui::Text("\n");
+    if (ImGui::Button("Search path")) {
+        switch (pathFinderSelection) {
+        case 0: //Option: Empty
+            onPathFindingButtonClick(PathFinder::NONE);
+            break;
+        case 1: //Option: Depth First Search
+            onPathFindingButtonClick(PathFinder::DEPTH_FIRST_SEARCH);
+            break;
+        default:
+            onPathFindingButtonClick(PathFinder::NONE);
+            break;
+        }
+    }
     ImGui::End();
 }
 
@@ -173,5 +216,23 @@ void GuiHandler::onGenerateMazeButtonClick(const Vector2 newSize, MazeHandler::M
     MH->generateMazeMap(mazeGenereatorSelector, newSize);
 
     //Notify observers of MazeHandler of change
+    MH->notify();
+}
+
+// \brief Event on the click of Find Path button
+// 
+// On find path button click, find a path to the current maze
+// 
+// \param mazeGenereatorSelector: Path finder algorithm for the search
+void GuiHandler::onPathFindingButtonClick(const PathFinder::PathFinderAlgorithm pathFinderAlgorithm) {
+    //TODO: Add support for starting position and finish position selection
+    PathFinder::findPath(
+        pathFinderAlgorithm,
+        Vector2(0, 0),
+        (MH->getMazeMap()->getMapSize() - Vector2(1, 1)),
+        MH->getMazeMap()->getMazePath(),
+        MH->getMazeMap()->getMazeNode(Vector2(0, 0))
+    );
+
     MH->notify();
 }

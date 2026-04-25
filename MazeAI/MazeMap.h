@@ -65,6 +65,9 @@ public:
 	// \brief Removes all the walls currently in the maze
 	void removeWalls();
 
+	// \brief Clears the current MazePath
+	void clearMazePath();
+
 	// \brief Resizes the current map and clears it
 	// \param newSize: New size for the maze map
 	void resize(const Vector2 newSize);

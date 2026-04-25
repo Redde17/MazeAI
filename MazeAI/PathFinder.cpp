@@ -1,8 +1,8 @@
-#include "PathFinder.h"
 #include <stack>
-#include <map>
-#include <iostream>
+
+#include "PathFinder.h"
 #include "MazeHandler.h"
+#include "DataCollector.h"
 
 ///VisitedNode struct implementation//
 // \brief VisitedNode constructor
@@ -38,13 +38,21 @@ bool PathFinder::VisitedNode::operator==(const VisitedNode& rhs) {
 // \param *mazePath: Pointer to the mazePath instance where to save the solution path
 // \param *mazeMap: Pointer to the mazeMap instance containing the maze to solve
 void PathFinder::findPath(const PathFinderAlgorithm pathFinderAlgorithm, const Vector2 startPos, const Vector2 finishPos, MazePath* mazePath, MazeNode* startingNode) {
+	DataCollector* DC = DataCollector::getInstance();
+	DC->chronoTime(DataCollector::START, DataCollector::PATH_FINDING);
+	
 	switch (pathFinderAlgorithm){
+	case NONE: //clear the maze path
+		MazeHandler::getInstance()->getMazeMap()->clearMazePath();
+		break;
 	case DEPTH_FIRST_SEARCH:
 		findPathDFS(startPos, finishPos, mazePath, startingNode);
 		break;
 	default:
 		break;
 	}
+
+	DC->chronoTime(DataCollector::STOP, DataCollector::PATH_FINDING);
 }
 
 // \brief Find the path to a given maze using random depth first search
