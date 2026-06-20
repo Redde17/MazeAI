@@ -123,7 +123,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\SFML-3.0.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\SFML-3.0.2\include;$(SolutionDir)lib\ImGui;$(SolutionDir)lib\ImGui-SFML;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -177,6 +177,7 @@
     <ClInclude Include="IObservable.h" />
     <ClInclude Include="PathFinder.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="searchable_priority_queue.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <ItemGroup>

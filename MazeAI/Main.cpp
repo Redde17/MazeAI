@@ -25,31 +25,13 @@ int main() {
     GuiHandler* GH = GuiHandler::getInstance();
 
     //Instanciate a mazeRenderer
-    MazeRenderer mazeRenderer(MH->getMazeMap(), 40.f);
+    MazeRenderer mazeRenderer(MH->getMazeMap(), (sf::VideoMode::getDesktopMode().size.x / 4) / DEFAULT_SIZE_X);
 
     //Pass the mazeRenderer to the GuiHandler singleton
     GH->setMazeRenderer(&mazeRenderer);
 
     //Adds mazeRenderer as an observer for the mazeHandler in case of map changes for redrawing
     MH->addObserver(mazeRenderer);
-
-    ///DEBUG
-    //MazePath mazePath(Vector2(DEFAULT_SIZE_X, DEFAULT_SIZE_Y));
-    /*PathFinder::findPath(
-        PathFinder::DEPTH_FIRST_SEARCH,
-        Vector2(0, 0),
-        Vector2(DEFAULT_SIZE_X - 1, DEFAULT_SIZE_Y - 1),
-        MH->getMazeMap()->getMazePath(),
-        MH->getMazeMap()->getMazeNode(Vector2(0, 0))
-    );
-
-    for (int x = 0; x < DEFAULT_SIZE_X; x++){
-        for (int y = 0; y < DEFAULT_SIZE_Y; y++){
-            std::cout << " " << MH->getMazeMap()->getMazePath()->getPathMapValue(Vector2(x, y));
-        }
-        std::cout << std::endl;
-    }*/
-    ///DEBUG END
 
     //Define window with settings
     sf::ContextSettings settings;

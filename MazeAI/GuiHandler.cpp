@@ -166,7 +166,16 @@ void GuiHandler::drawPathSettings() {
             onPathFindingButtonClick(PathFinder::NONE);
             break;
         case 1: //Option: Depth First Search
+            onPathFindingButtonClick(PathFinder::NONE);
             onPathFindingButtonClick(PathFinder::DEPTH_FIRST_SEARCH);
+            break;
+        case 2: //Option: Best First Greedy Search
+            onPathFindingButtonClick(PathFinder::NONE);
+            onPathFindingButtonClick(PathFinder::BEST_FIRST_GREEDY);
+            break;
+        case 3: //Option: A* Search
+            onPathFindingButtonClick(PathFinder::NONE);
+            onPathFindingButtonClick(PathFinder::A_STAR);
             break;
         default:
             onPathFindingButtonClick(PathFinder::NONE);

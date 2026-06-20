@@ -27,11 +27,16 @@ public:
 	// \brief Overload of operator !=
 	bool operator!=(const Vector2 other);
 	// \brief Overload of operator ==
-	bool operator==(const Vector2 other);
+	bool operator==(const Vector2 other) const;
 	// \brief Overload of operator <
 	bool operator<(const Vector2 other) const noexcept;
+	// \brief Overload of operator +
+	Vector2 operator+(const Vector2 other) const;
 	// \brief Overload of operator +
 	Vector2 operator+(const Vector2 other);
 	// \brief Overload of operator -
 	Vector2 operator-(const Vector2 other);
+	// \brief Overload of operator -
+	Vector2& operator+=(const Vector2 other);
+
 };

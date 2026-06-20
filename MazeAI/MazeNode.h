@@ -5,10 +5,10 @@
 
 //enum for the possible neghbours directions in a square maze
 enum Direction {
-	NORTH,
-	SOUTH,
-	EAST,
-	WEST
+	NORTH = 0,
+	SOUTH = 1,
+	EAST = 2,
+	WEST = 3
 };
 
 // Class for the maze node contained inside the maze map

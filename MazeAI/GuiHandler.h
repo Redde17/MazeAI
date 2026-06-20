@@ -20,9 +20,11 @@ private:
 	};
 
 	//Items for path finding algorithm drop down menu selector
-	const char* searchSelectorItems[2] = {
+	const char* searchSelectorItems[4] = {
 		"None",
-		"Depth First Search"
+		"Depth First Search",
+		"Best First Greedy",
+		"A*"
 	};
 
 	MazeHandler* MH;

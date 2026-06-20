@@ -77,10 +77,7 @@ void MazeGenerator::generateMazeDFS(MazeMap* mazeMap, const Vector2 startPos) {
 			recursionStack.pop();
 			continue;
 		}
-		
-		//Push the current cell to the stack
-		//recursionStack.push(currentNode);
-		
+
 		//Remove the wall between the current cell and the chosen cell
 		linkNodes(
 			mazeMap,

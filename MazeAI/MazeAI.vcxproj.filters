@@ -179,6 +179,9 @@
     <ClInclude Include="DataCollector.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="searchable_priority_queue.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MazeAI.rc">

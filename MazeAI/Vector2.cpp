@@ -35,7 +35,7 @@ bool Vector2::operator!=(const Vector2 other) {
 	return ((this->x != other.x) || (this->y != other.y));
 }
 // \brief Overload of operator ==
-bool Vector2::operator==(const Vector2 other) {
+bool Vector2::operator==(const Vector2 other) const{
 	//if (this->x == other.x && this->y == other.y)
 	//	return true;
 	//return false;
@@ -43,8 +43,17 @@ bool Vector2::operator==(const Vector2 other) {
 	return ((this->x == other.x) && (this->y == other.y));
 }
 
+// \brief Overload of operator <
 bool Vector2::operator<(const Vector2 other) const noexcept {
-	return ((this->x + this->y) < (other.x + other.y));
+	//Greatness is based on magnitude 
+	double a = sqrt(pow(this->x, 2) + pow(this->y, 2));
+	double b = sqrt(pow(other.x, 2) + pow(other.y, 2));
+	return a < b;
+}
+
+// \brief Overload of operator +
+Vector2 Vector2::operator+(const Vector2 other) const{
+	return Vector2(x + other.x, y + other.y);
 }
 
 // \brief Overload of operator +
@@ -55,4 +64,11 @@ Vector2 Vector2::operator+(const Vector2 other) {
 // \brief Overload of operator -
 Vector2 Vector2::operator-(const Vector2 other) {
 	return Vector2(x - other.x, y - other.y);
+}
+
+// \brief Overload of operator -
+Vector2& Vector2::operator+=(const Vector2 other) {
+	this->x += other.x;
+	this->y += other.y;
+	return *this;
 }

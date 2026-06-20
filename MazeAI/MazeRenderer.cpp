@@ -198,25 +198,36 @@ void MazeRenderer::renderWallsLayer() {
 void MazeRenderer::renderLayers() {
 	//Render all the layers
 	DataCollector* DC = DataCollector::getInstance();
+	mazeTexture.resize(textureSize);
 
 	//Render bacgkround layer
 	renderBackgroundLayer();
+	mazeTexture.draw(sf::Sprite(backgroundTexture.getTexture()));
+	backgroundTexture.resize(sf::Vector2u(1, 1));
 
 	//Render path layer
 	DC->chronoTime(DataCollector::START, DataCollector::RENDERING_PATH_LAYER); //Start timing generation
 	renderPathLayer();
 	DC->chronoTime(DataCollector::STOP, DataCollector::RENDERING_PATH_LAYER); //Start timing generation
+	mazeTexture.draw(sf::Sprite(pathTexture.getTexture()));
+	pathTexture.resize(sf::Vector2u(1, 1));
 
 	//Render wall layer
 	DC->chronoTime(DataCollector::START, DataCollector::RENDERING_WALL_LAYER); //Start timing generation
 	renderWallsLayer();
 	DC->chronoTime(DataCollector::STOP, DataCollector::RENDERING_WALL_LAYER); //Start timing generation
+	mazeTexture.draw(sf::Sprite(wallsTexture.getTexture()));
+	wallsTexture.resize(sf::Vector2u(1, 1));
 
 	//Resize and draw all layers onto mazeTexture
-	mazeTexture.resize(textureSize);
-	mazeTexture.draw(sf::Sprite(backgroundTexture.getTexture()));
-	mazeTexture.draw(sf::Sprite(pathTexture.getTexture()));
-	mazeTexture.draw(sf::Sprite(wallsTexture.getTexture()));
+	//mazeTexture.resize(textureSize);
+	//mazeTexture.draw(sf::Sprite(backgroundTexture.getTexture()));
+	//mazeTexture.draw(sf::Sprite(pathTexture.getTexture()));
+	//mazeTexture.draw(sf::Sprite(wallsTexture.getTexture()));
+
+	//backgroundTexture.clear();
+	//pathTexture.clear();
+	//wallsTexture.clear();
 }
 
 // \brief Updates the sprite, if needed deletes old sprite
