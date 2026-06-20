@@ -191,8 +191,7 @@ void PathFinder::findPathBestFirst(const Vector2 startPos, const Vector2 finishP
 				continue;
 
 			//Calculate gScore of neighboutBFNode based if the algo is running an A* or Greedy version
-			int gScore = getGScore(pathMap, startPos, neighbour, algorithm);
-
+			int gScore = getGScore(pathMap, bestBFNode, algorithm);
 			BestFirstNode neighbourBFNode = BestFirstNode(
 				neighbour.mazeNode,
 				neighbour.position,
@@ -281,13 +280,14 @@ int PathFinder::getManhattanDistance(const Vector2 pos1, const Vector2 pos2) {
 // \brief Get the g score for a certain node
 //
 // \param pathMap: Map with all the paths currently knows to the algorithm
-// \param node: Node of wich to calculate the gScore
+// \param previuosNode: The last node on the path to the current one
+// \param algorithm: The algorithm for wich to calculate the gScore
 //
 // \return int of the gScore
-int PathFinder::getGScore(const std::map<BestFirstNode, BestFirstNode>& pathMap, const Vector2 startNode, const DFSNode node, const PathFinderAlgorithm algorithm) {
+int PathFinder::getGScore(const std::map<BestFirstNode, BestFirstNode>& pathMap, const BestFirstNode previousNode, const PathFinderAlgorithm algorithm) {
 	if (algorithm != A_STAR)
 		return 0;
-	return countPathToStart(pathMap, startNode, BestFirstNode(node, 0, 0));
+	return previousNode.gScore + 1;
 }
 
 // \brief Get the position of a neighbouring node from the nodes position
@@ -328,6 +328,8 @@ void PathFinder::traceSolutionPath(const std::map<BestFirstNode, BestFirstNode>&
 
 // \brief Counts the amount fo nodes from a certain node to the starting node
 //
+//	DEPRECATED, function it higly inefficient driving computation times way up
+// 
 // \param startNode: Position of the starting node
 // \param node: Node from wich to start counting
 // \param pathMap: Map with all the paths currently knows to the algorithm

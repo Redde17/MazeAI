@@ -111,11 +111,11 @@ private:
 	// \brief Get the g score for a certain node
 	//
 	// \param pathMap: Map with all the paths currently knows to the algorithm
-	// \param startNode: Position of the starting node
-	// \param node: Node of wich to calculate the gScore
+	// \param previuosNode: The last node on the path to the current one
+	// \param algorithm: The algorithm for wich to calculate the gScore
 	//
 	// \return int of the gScore
-	static int getGScore(const std::map<BestFirstNode, BestFirstNode>& pathMap, const Vector2 startNode, const DFSNode node, const PathFinderAlgorithm algorithm);
+	static int getGScore(const std::map<BestFirstNode, BestFirstNode>& pathMap, const BestFirstNode previousNode, const PathFinderAlgorithm algorithm);
 
 	// \brief Get the position of a neighbouring node from the nodes position
 	//
@@ -133,6 +133,8 @@ private:
 	static void traceSolutionPath(const std::map<BestFirstNode, BestFirstNode>& pathMap, MazePath* mazePath, const Vector2 startNode, const BestFirstNode finishNode);
 
 	// \brief Counts the amount fo nodes from a certain node to the starting node
+	// 
+	//	DEPRECATED, function it higly inefficient driving computation times way up
 	// 
 	// \param pathMap: Map with all the paths currently knows to the algorithm
 	// \param startNode: Position of the starting node
